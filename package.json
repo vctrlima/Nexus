@@ -1,0 +1,40 @@
+{
+  "name": "nexus",
+  "version": "1.0.0",
+  "description": "Explore a world of insightful articles, captivating stories, and thought-provoking essays on [Your Platform Name]. Connect with a community of passionate writers and curious minds, sharing diverse perspectives and knowledge in a creative space that inspires learning and meaningful discussions.",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/rimraf ./dist && ./node_modules/.bin/tsc --skipLibCheck",
+    "lint": "npx eslint .",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+    "start": "npm run build && node dist/server.js",
+    "start:dev": "nodemon",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "prepare": "husky install"
+  },
+  "author": "Victor Lima",
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
+    "@types/node": "^20.4.5",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "eslint": "^8.46.0",
+    "husky": "^8.0.3",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.0",
+    "prisma": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "module-alias": "^2.2.3",
+    "rimraf": "^5.0.1"
+  },
+  "_moduleAliases": {
+    "@": "dist"
+  }
+}
