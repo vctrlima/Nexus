@@ -1,10 +1,12 @@
 import { Post } from '@/domain/entities'
 
 export interface CreatePost {
-  create: (params: CreatePost.Params) => CreatePost.Model
+  create: (params: CreatePost.Params) => Promise<CreatePost.Model>
 }
 
 export namespace CreatePost {
   export type Params = Post
-  export type Model = Promise<{ id: string }>
+  export interface Model {
+    id: string
+  }
 }

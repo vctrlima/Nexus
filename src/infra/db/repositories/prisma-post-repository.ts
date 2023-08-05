@@ -19,7 +19,9 @@ export class PrismaPostRepository implements PostRepository {
   async findById(id: string): Promise<Post> {
     return await this.prisma.post.findUnique({
       where: { id },
-      include: { author: true, like: true, list: true },
+      include: {
+        author: { select: { id: true, email: true, name: true } },
+      },
     })
   }
 }

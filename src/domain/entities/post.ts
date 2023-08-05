@@ -6,6 +6,8 @@ export class Post {
   public readonly content: string
   public readonly published: boolean
   public readonly author: User
+  public readonly createdAt?: Date
+  public readonly updatedAt?: Date
 
   constructor(
     id: string,

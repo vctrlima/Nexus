@@ -6,8 +6,6 @@ export class EmailValidation implements ParameterValidation {
     const emailRegExp =
       /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 
-    return !input || emailRegExp.test(input)
-      ? null
-      : new InvalidFieldError('email')
+    return emailRegExp.test(input) ? null : new InvalidFieldError('email')
   }
 }

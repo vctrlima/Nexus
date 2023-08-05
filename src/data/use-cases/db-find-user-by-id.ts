@@ -4,7 +4,7 @@ import { FindUserById } from '@/domain/use-cases'
 export class DbFindUserById implements FindUserById {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async find(id: FindUserById.Params): FindUserById.Model {
+  async find(id: FindUserById.Params): Promise<FindUserById.Model> {
     return await this.userRepository.findById(id)
   }
 }
