@@ -1,10 +1,10 @@
 import { UserRepository } from '@/data/protocols/db'
-import { DbCreateUser } from './db-create-user'
 import { CreateUser } from '@/domain/use-cases'
 import { faker } from '@faker-js/faker'
+import { DbCreateUser } from './db-create-user'
 
 const createUserRepositoryMock = (): UserRepository => {
-  return { create: jest.fn(), findById: jest.fn() } as UserRepository
+  return { create: jest.fn() } as UserRepository
 }
 
 describe('DbCreateUser', () => {

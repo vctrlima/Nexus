@@ -11,6 +11,7 @@ const prismaClientMock = (): PrismaClient =>
     user: {
       create: jest.fn(),
       findUnique: jest.fn(),
+      update: jest.fn(),
     },
   }) as any
 
@@ -89,5 +90,49 @@ describe('PrismaUserRepository', () => {
       },
     })
     expect(result).toEqual(foundUser)
+  })
+
+  it('should update an user', async () => {
+    const hashedPassword = hashSync(
+      faker.internet.password(),
+      env.passwordHashSalt,
+    )
+    const updatedUser: User = {
+      id: faker.string.uuid(),
+      email: faker.internet.email(),
+      password: hashedPassword,
+      name: faker.person.fullName(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+    jest.spyOn(prisma.user, 'update').mockResolvedValue({
+      id: updatedUser.id,
+      email: updatedUser.email,
+      password: updatedUser.password,
+      name: updatedUser.name,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
+    })
+
+    const result = await prismaUserRepository.update(updatedUser)
+
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: updatedUser.id },
+      data: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        password: updatedUser.password,
+        name: updatedUser.name,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+      },
+    })
+    expect(result).toEqual({
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
+    })
   })
 })

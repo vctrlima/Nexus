@@ -31,4 +31,14 @@ export class PrismaUserRepository implements UserRepository {
       },
     })
   }
+
+  async update(user: User): Promise<User> {
+    user.password = hashSync(user.password, env.passwordHashSalt)
+    const { id, email, name, createdAt, updatedAt } =
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: user,
+      })
+    return { id, email, name, createdAt, updatedAt }
+  }
 }
