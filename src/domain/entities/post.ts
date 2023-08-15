@@ -1,11 +1,11 @@
 import { User } from './user'
 
 export class Post {
-  public readonly id?: string
+  public id?: string
   public readonly title: string
   public readonly content: string
   public readonly published: boolean
-  public readonly author: User
+  public readonly author?: User
   public readonly createdAt?: Date
   public readonly updatedAt?: Date
 

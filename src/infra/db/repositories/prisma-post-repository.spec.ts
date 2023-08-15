@@ -9,6 +9,7 @@ const prismaClientMock = (): PrismaClient =>
     post: {
       create: jest.fn(),
       findUnique: jest.fn(),
+      update: jest.fn(),
     },
   }) as any
 
@@ -95,6 +96,50 @@ describe('PrismaPostRepository', () => {
       listId: '',
       createdAt: foundPost.createdAt,
       updatedAt: foundPost.updatedAt,
+    })
+  })
+
+  it('should update a post', async () => {
+    const updatedPost: Post = {
+      id: faker.string.uuid(),
+      title: faker.lorem.words(),
+      content: faker.lorem.words(),
+      published: true,
+      author: {
+        id: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+    jest.spyOn(prisma.post, 'update').mockResolvedValue({
+      id: updatedPost.id,
+      title: updatedPost.title,
+      content: updatedPost.content,
+      published: updatedPost.published,
+      authorId: updatedPost.author.id,
+      listId: '',
+      createdAt: updatedPost.createdAt,
+      updatedAt: updatedPost.updatedAt,
+    })
+
+    const result = await prismaPostRepository.update(updatedPost)
+
+    expect(prisma.post.update).toHaveBeenCalledWith({
+      where: { id: updatedPost.id },
+      data: {
+        title: updatedPost.title,
+        content: updatedPost.content,
+        published: updatedPost.published,
+      },
+    })
+    expect(result).toEqual({
+      id: updatedPost.id,
+      title: updatedPost.title,
+      content: updatedPost.content,
+      published: updatedPost.published,
+      author: updatedPost.author,
     })
   })
 })
