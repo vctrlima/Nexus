@@ -18,7 +18,7 @@ describe('FindUserByIdController', () => {
     findUserByIdController = new FindUserByIdController(findUserById)
   })
 
-  it('should find a user by id and return 200', async () => {
+  it('should find an user by id and return 200', async () => {
     const userId = faker.string.uuid()
     const foundUser: User = {
       id: userId,

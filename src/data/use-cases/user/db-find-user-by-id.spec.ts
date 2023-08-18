@@ -18,7 +18,7 @@ describe('DbFindUserById', () => {
     dbFindUserById = new DbFindUserById(userRepositoryMock)
   })
 
-  it('should find a user by id', async () => {
+  it('should find an user by id', async () => {
     const userId = faker.string.uuid()
     const foundUser: FindUserById.Model = {
       id: userId,

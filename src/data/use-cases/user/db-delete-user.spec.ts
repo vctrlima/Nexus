@@ -17,7 +17,7 @@ describe('DbDeleteUser', () => {
     dbDeleteUser = new DbDeleteUser(userRepositoryMock)
   })
 
-  it('should delete a user by id', async () => {
+  it('should delete an user by id', async () => {
     const userId = faker.string.uuid()
     jest
       .spyOn(userRepositoryMock, 'delete')

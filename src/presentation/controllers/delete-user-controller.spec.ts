@@ -17,7 +17,7 @@ describe('DeleteUserController', () => {
     deleteUserController = new DeleteUserController(deleteUser)
   })
 
-  it('should delete a user by id and return 204', async () => {
+  it('should delete an user by id and return 204', async () => {
     const userId = faker.string.uuid()
     jest.spyOn(deleteUser, 'delete').mockResolvedValue()
     const request: HttpRequest<{ id: string }> = {
