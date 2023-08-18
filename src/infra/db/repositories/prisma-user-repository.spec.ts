@@ -12,6 +12,7 @@ const prismaClientMock = (): PrismaClient =>
       create: jest.fn(),
       findUnique: jest.fn(),
       update: jest.fn(),
+      delete: jest.fn(),
     },
   }) as any
 
@@ -134,5 +135,13 @@ describe('PrismaUserRepository', () => {
       createdAt: updatedUser.createdAt,
       updatedAt: updatedUser.updatedAt,
     })
+  })
+
+  it('should delete an user by id', async () => {
+    const userId = faker.string.uuid()
+
+    await prismaUserRepository.delete(userId)
+
+    expect(prisma.user.delete).toHaveBeenCalledWith({ where: { id: userId } })
   })
 })
