@@ -4,6 +4,10 @@ import { DbDeleteUser } from './db-delete-user'
 
 const createUserRepositoryMock = (): UserRepository => {
   return {
+    create: jest.fn(),
+    findById: jest.fn(),
+    findByEmail: jest.fn(),
+    update: jest.fn(),
     delete: jest.fn(),
   } as UserRepository
 }

@@ -1,4 +1,5 @@
 import { CreateUser, FindUserById } from '@/domain/use-cases'
+import { MissingParamError } from '@/presentation/errors'
 import { badRequest, created, serverError } from '@/presentation/helpers'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 import { EmailValidation, PasswordValidation } from '@/validation/validators'
@@ -16,6 +17,7 @@ export class CreateUserController implements Controller {
   ): Promise<HttpResponse<FindUserById.Model>> {
     try {
       const { body } = request
+      if (!body) return badRequest(new MissingParamError('body'))
       const invalidEmail = this.emailValidation.validate(body.email)
       if (invalidEmail) return badRequest(invalidEmail)
       const invalidPassword = this.passwordValidation.validate(body.password)

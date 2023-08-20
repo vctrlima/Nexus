@@ -4,7 +4,7 @@
   "description": "Explore a world of insightful articles, captivating stories, and thought-provoking essays on [Your Platform Name]. Connect with a community of passionate writers and curious minds, sharing diverse perspectives and knowledge in a creative space that inspires learning and meaningful discussions.",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/rimraf ./dist && ./node_modules/.bin/tsc --skipLibCheck",
+    "build": "./node_modules/.bin/rimraf ./dist && ./node_modules/.bin/tsc -p tsconfig.prod.json --skipLibCheck",
     "lint": "npx eslint .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "start": "npm run build && node dist/main/server.js",

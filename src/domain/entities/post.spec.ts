@@ -12,8 +12,19 @@ describe('Post', () => {
     const postTitle = faker.lorem.words()
     const postContent = faker.lorem.words()
 
-    const author = new User(userId, userEmail, userPassword, userName)
-    const post = new Post(postId, postTitle, postContent, true, author)
+    const author = new User({
+      id: userId,
+      email: userEmail,
+      password: userPassword,
+      name: userName,
+    })
+    const post = new Post({
+      id: postId,
+      title: postTitle,
+      content: postContent,
+      published: true,
+      author,
+    })
 
     expect(post.id).toBe(postId)
     expect(post.title).toBe(postTitle)
@@ -30,13 +41,43 @@ describe('Post', () => {
     const postTitle = faker.lorem.words()
     const postContent = faker.lorem.words()
 
-    const author = new User(userId, userEmail, userPassword, userName)
-    const post = new Post(undefined, postTitle, postContent, true, author)
+    const author = new User({
+      id: userId,
+      email: userEmail,
+      password: userPassword,
+      name: userName,
+    })
+    const post = new Post({
+      id: undefined,
+      title: postTitle,
+      content: postContent,
+      published: true,
+      author,
+    })
 
     expect(post.id).toBeUndefined()
     expect(post.title).toBe(postTitle)
     expect(post.content).toBe(postContent)
     expect(post.published).toBe(true)
     expect(post.author).toStrictEqual(author)
+  })
+
+  it('should have an undefined author when not provided', () => {
+    const postId = faker.string.uuid()
+    const postTitle = faker.lorem.words()
+    const postContent = faker.lorem.words()
+
+    const post = new Post({
+      id: postId,
+      title: postTitle,
+      content: postContent,
+      published: true,
+    })
+
+    expect(post.id).toBe(postId)
+    expect(post.title).toBe(postTitle)
+    expect(post.content).toBe(postContent)
+    expect(post.published).toBe(true)
+    expect(post.author).toBeUndefined()
   })
 })

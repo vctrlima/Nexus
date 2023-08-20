@@ -5,26 +5,25 @@ export class Post {
   public readonly title: string
   public readonly content: string
   public readonly published: boolean
-  public readonly author?: User
+  public readonly author?: Partial<User>
   public readonly createdAt?: Date
   public readonly updatedAt?: Date
 
-  constructor(
-    id: string,
-    title: string,
-    content: string,
-    published: boolean,
-    author: User,
-  ) {
-    this.id = id
-    this.title = title
-    this.content = content
-    this.published = published
-    this.author = new User(
-      author.id,
-      author.email,
-      author.password,
-      author.name,
-    )
+  constructor(params: {
+    id?: string
+    title: string
+    content: string
+    published: boolean
+    author?: User
+    createdAt?: Date
+    updatedAt?: Date
+  }) {
+    this.id = params.id
+    this.title = params.title
+    this.content = params.content
+    this.published = params.published
+    this.author = params.author ? new User({ ...params.author }) : undefined
+    this.createdAt = params.createdAt
+    this.updatedAt = params.updatedAt
   }
 }

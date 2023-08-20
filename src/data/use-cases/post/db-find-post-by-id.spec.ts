@@ -5,8 +5,11 @@ import { DbFindPostById } from './db-find-post-by-id'
 
 const createPostRepositoryMock = (): PostRepository => {
   return {
+    create: jest.fn(),
     findById: jest.fn(),
-  } as unknown as PostRepository
+    update: jest.fn(),
+    delete: jest.fn(),
+  } as PostRepository
 }
 
 describe('DbFindPostById', () => {

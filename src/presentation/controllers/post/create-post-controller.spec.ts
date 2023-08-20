@@ -1,5 +1,5 @@
 import { CreatePost, FindPostById } from '@/domain/use-cases'
-import { created, serverError } from '@/presentation/helpers'
+import { badRequest, created, serverError } from '@/presentation/helpers'
 import { HttpRequest } from '@/presentation/protocols'
 import { faker } from '@faker-js/faker'
 import { CreatePostController } from './create-post-controller'
@@ -57,6 +57,14 @@ describe('CreatePostController', () => {
     expect(createPost.create).toHaveBeenCalledWith(createParams)
     expect(findPostById.find).toHaveBeenCalledWith(createdPost.id)
     expect(response).toEqual(created(foundPost))
+  })
+
+  it('should throw MissingParamError if body is not provided', async () => {
+    const request: HttpRequest<CreatePost.Params> = {}
+
+    const response = await createPostController.handle(request)
+
+    expect(response).toEqual(badRequest(new Error('Missing param: body')))
   })
 
   it('should return 500 if an error occurs', async () => {

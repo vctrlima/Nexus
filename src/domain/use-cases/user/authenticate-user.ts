@@ -12,7 +12,6 @@ export namespace AuthenticateUser {
 
   export type Model = {
     accessToken: string
-    refreshToken: string
-    user: User
+    user: Partial<User>
   }
 }

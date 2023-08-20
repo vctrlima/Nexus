@@ -2,7 +2,7 @@ import { type Controller, type HttpRequest } from '@/presentation/protocols'
 import { type Request, type RequestHandler, type Response } from 'express'
 
 interface CustomRequest extends Request {
-  decoded: any
+  decoded?: any
 }
 
 export const adaptRoute = (controller: Controller): RequestHandler => {

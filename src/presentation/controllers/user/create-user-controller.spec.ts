@@ -58,7 +58,7 @@ describe('CreateUserController', () => {
     jest.spyOn(passwordValidation, 'validate').mockReturnValue(null)
     const createdUser = { id }
     jest.spyOn(createUser, 'create').mockResolvedValue(createdUser)
-    const foundUser: FindUserById.Model = { id, email, name }
+    const foundUser: FindUserById.Model = { id, email, name, password }
     jest.spyOn(findUserById, 'find').mockResolvedValue(foundUser)
     const request: HttpRequest<CreateUser.Params> = { body: createParams }
 
@@ -69,6 +69,14 @@ describe('CreateUserController', () => {
     expect(createUser.create).toHaveBeenCalledWith(createParams)
     expect(findUserById.find).toHaveBeenCalledWith(createdUser.id)
     expect(response).toEqual(created(foundUser))
+  })
+
+  it('should throw MissingParamError if body is not provided', async () => {
+    const request: HttpRequest<CreateUser.Params> = {}
+
+    const response = await createUserController.handle(request)
+
+    expect(response).toEqual(badRequest(new Error('Missing param: body')))
   })
 
   it('should return 400 if email validation fails', async () => {

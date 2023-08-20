@@ -8,7 +8,12 @@ describe('User', () => {
     const password = faker.internet.password()
     const name = faker.person.fullName()
 
-    const user = new User(id, email, password, name)
+    const user = new User({
+      id,
+      email,
+      password,
+      name,
+    })
 
     expect(user.id).toBe(id)
     expect(user.email).toBe(email)
@@ -21,7 +26,7 @@ describe('User', () => {
     const password = faker.internet.password()
     const name = faker.person.fullName()
 
-    const user = new User(undefined, email, password, name)
+    const user = new User({ id: undefined, email, password, name })
 
     expect(user.id).toBeUndefined()
     expect(user.email).toBe(email)
@@ -35,7 +40,7 @@ describe('User', () => {
     const password = faker.internet.password()
     const name = faker.person.fullName()
 
-    const user = new User(id, email, password, name)
+    const user = new User({ id, email, password, name })
     expect(user.password).toBe(password)
     const newPassword = faker.internet.password()
     user.password = newPassword

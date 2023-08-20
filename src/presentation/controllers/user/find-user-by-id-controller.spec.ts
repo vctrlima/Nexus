@@ -22,6 +22,7 @@ describe('FindUserByIdController', () => {
     const userId = faker.string.uuid()
     const foundUser: User = {
       id: userId,
+      password: faker.internet.password(),
       email: faker.internet.email(),
       name: faker.person.fullName(),
     }

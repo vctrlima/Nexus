@@ -5,6 +5,8 @@ export class DbFindUserByEmail implements FindUserByEmail {
   constructor(private readonly userRepository: UserRepository) {}
 
   async find(params: FindUserByEmail.Params): Promise<FindUserByEmail.Model> {
-    return await this.userRepository.findByEmail(params)
+    const user = await this.userRepository.findByEmail(params)
+    if (!user) throw new Error('User not found')
+    return user
   }
 }

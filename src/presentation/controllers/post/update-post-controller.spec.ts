@@ -1,5 +1,5 @@
 import { UpdatePost } from '@/domain/use-cases'
-import { ok, serverError } from '@/presentation/helpers'
+import { badRequest, ok, serverError } from '@/presentation/helpers'
 import { HttpRequest } from '@/presentation/protocols'
 import { faker } from '@faker-js/faker'
 import { UpdatePostController } from './update-post-controller'
@@ -41,6 +41,16 @@ describe('UpdatePostController', () => {
 
     expect(updatePost.update).toHaveBeenCalledWith(updateData)
     expect(response).toEqual(ok(updatedPost))
+  })
+
+  it('should throw MissingParamError if body is not provided', async () => {
+    const request: HttpRequest<UpdatePost.Params> = {
+      params: { id: faker.string.uuid() },
+    }
+
+    const response = await updatePostController.handle(request)
+
+    expect(response).toEqual(badRequest(new Error('Missing param: body')))
   })
 
   it('should return 500 Internal Server Error if an error occurs', async () => {

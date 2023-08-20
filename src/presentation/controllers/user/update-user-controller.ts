@@ -1,4 +1,5 @@
 import { UpdateUser } from '@/domain/use-cases'
+import { MissingParamError } from '@/presentation/errors'
 import { badRequest, ok, serverError } from '@/presentation/helpers'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 import { EmailValidation, PasswordValidation } from '@/validation/validators'
@@ -16,6 +17,7 @@ export class UpdateUserController implements Controller {
     try {
       const { body } = request
       const { id } = request.params
+      if (!body) return badRequest(new MissingParamError('body'))
       body.id = id
       const invalidEmail = this.emailValidation.validate(body.email)
       if (invalidEmail) return badRequest(invalidEmail)

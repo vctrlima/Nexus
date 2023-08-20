@@ -4,7 +4,12 @@ import { faker } from '@faker-js/faker'
 import { DbCreatePost } from './db-create-post'
 
 const createPostRepositoryMock = (): PostRepository => {
-  return { create: jest.fn(), findById: jest.fn() } as PostRepository
+  return {
+    create: jest.fn(),
+    findById: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  } as PostRepository
 }
 
 describe('DbCreatePost', () => {

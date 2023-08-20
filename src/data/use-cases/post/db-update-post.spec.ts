@@ -5,7 +5,10 @@ import { faker } from '@faker-js/faker'
 import { DbUpdatePost } from './db-update-post'
 
 const postRepositoryMock = (): PostRepository => ({
+  create: jest.fn(),
+  findById: jest.fn(),
   update: jest.fn(),
+  delete: jest.fn(),
 })
 
 describe('DbUpdatePost', () => {

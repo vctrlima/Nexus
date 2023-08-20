@@ -1,10 +1,15 @@
+import { Hasher } from '@/data/protocols/cryptography'
 import { UserRepository } from '@/data/protocols/db'
 import { UpdateUser } from '@/domain/use-cases'
 
 export class DbUpdateUser implements UpdateUser {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly hasher: Hasher,
+  ) {}
 
   async update(params: UpdateUser.Params): Promise<UpdateUser.Model> {
+    params.password = await this.hasher.hash(params.password)
     return await this.userRepository.update(params)
   }
 }

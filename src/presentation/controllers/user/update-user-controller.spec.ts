@@ -65,6 +65,16 @@ describe('UpdateUserController', () => {
     expect(response).toEqual(ok(updateParams))
   })
 
+  it('should throw MissingParamError if body is not provided', async () => {
+    const request: HttpRequest<UpdateUser.Params> = {
+      params: { id: faker.string.uuid() },
+    }
+
+    const response = await updateUserController.handle(request)
+
+    expect(response).toEqual(badRequest(new Error('Missing param: body')))
+  })
+
   it('should return 400 if email validation fails', async () => {
     const userId = faker.string.uuid()
     const email = 'testemail.com'
