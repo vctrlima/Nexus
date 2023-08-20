@@ -11,8 +11,8 @@ export class FindUserByIdController implements Controller {
   ): Promise<HttpResponse<User>> {
     try {
       const { id } = request.params
-      const post = await this.findUserById.find(id)
-      return ok(post)
+      const user = await this.findUserById.find(id)
+      return ok(user)
     } catch (error) {
       return serverError(error)
     }

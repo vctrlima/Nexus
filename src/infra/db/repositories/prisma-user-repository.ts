@@ -32,6 +32,20 @@ export class PrismaUserRepository implements UserRepository {
     })
   }
 
+  async findByEmail(email: string): Promise<User> {
+    return await this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+        posts: true,
+        updatedAt: true,
+      },
+    })
+  }
+
   async update(user: User): Promise<User> {
     user.password = hashSync(user.password, env.passwordHashSalt)
     const { id, email, name, createdAt, updatedAt } =

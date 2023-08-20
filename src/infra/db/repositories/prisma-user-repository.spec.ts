@@ -93,6 +93,41 @@ describe('PrismaUserRepository', () => {
     expect(result).toEqual(foundUser)
   })
 
+  it('should find an user by email', async () => {
+    const userEmail = faker.internet.email()
+    const foundUser: User = {
+      id: faker.string.uuid(),
+      email: userEmail,
+      password: faker.internet.password(),
+      name: faker.person.fullName(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+    jest.spyOn(prisma.user, 'findUnique').mockResolvedValue({
+      id: foundUser.id,
+      email: foundUser.email,
+      password: foundUser.password,
+      name: foundUser.name,
+      createdAt: foundUser.createdAt,
+      updatedAt: foundUser.updatedAt,
+    })
+
+    const result = await prismaUserRepository.findByEmail(userEmail)
+
+    expect(prisma.user.findUnique).toHaveBeenCalledWith({
+      where: { email: userEmail },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+        posts: true,
+        updatedAt: true,
+      },
+    })
+    expect(result).toEqual(foundUser)
+  })
+
   it('should update an user', async () => {
     const hashedPassword = hashSync(
       faker.internet.password(),

@@ -6,7 +6,7 @@ import { DbFindUserById } from './db-find-user-by-id'
 const createUserRepositoryMock = (): UserRepository => {
   return {
     findById: jest.fn(),
-  } as unknown as UserRepository
+  } as UserRepository
 }
 
 describe('DbFindUserById', () => {
