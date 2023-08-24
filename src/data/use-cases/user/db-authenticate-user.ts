@@ -1,11 +1,14 @@
 import { Encrypter, HashComparer } from '@/data/protocols/cryptography'
 import { UserRepository } from '@/data/protocols/db'
-import { AuthenticateUser } from '@/domain/use-cases'
+import { AuthenticateUser, CreateRefreshToken } from '@/domain/use-cases'
+import { uuidV4 } from '@/helpers/string'
+import env from '@/main/config/env'
 import { AccessDeniedError } from '@/presentation/errors'
 
 export class DbAuthenticateUser implements AuthenticateUser {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly createRefreshToken: CreateRefreshToken,
     private readonly hashComparer: HashComparer,
     private readonly encrypter: Encrypter,
   ) {}
@@ -18,9 +21,25 @@ export class DbAuthenticateUser implements AuthenticateUser {
       user.password,
     )
     if (!isValid || !user.id) throw new AccessDeniedError()
-    const accessToken = await this.encrypter.encrypt(user.id)
+    const accessToken = await this.encrypter.encrypt({
+      plainText: user.id,
+      secret: env.jwtAccessTokenSecret,
+    })
+    const jti = uuidV4()
+    const refreshToken = await this.encrypter.encrypt({
+      plainText: user.id,
+      secret: env.jwtRefreshTokenSecret,
+      expiresIn: '7d',
+      jti,
+    })
+    await this.createRefreshToken.create({
+      jti,
+      refreshToken,
+      userId: user.id,
+    })
     return {
       accessToken,
+      refreshToken,
       user: { id: user.id, email: user.email, name: user.name },
     }
   }

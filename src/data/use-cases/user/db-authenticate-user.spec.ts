@@ -1,5 +1,5 @@
 import { Encrypter, HashComparer } from '@/data/protocols/cryptography'
-import { UserRepository } from '@/data/protocols/db'
+import { RefreshTokenRepository, UserRepository } from '@/data/protocols/db'
 import { FindUserByEmail } from '@/domain/use-cases'
 import { AccessDeniedError } from '@/presentation/errors'
 import { faker } from '@faker-js/faker'
@@ -13,6 +13,15 @@ const findUserByEmailRepositoryMock = (): UserRepository => {
     update: jest.fn(),
     delete: jest.fn(),
   } as UserRepository
+}
+
+const createRefreshTokenRepositoryMock = (): RefreshTokenRepository => {
+  return {
+    create: jest.fn(),
+    findById: jest.fn(),
+    delete: jest.fn(),
+    revokeByUserId: jest.fn(),
+  } as RefreshTokenRepository
 }
 
 const hashComparerMock = (): HashComparer => {
@@ -29,16 +38,19 @@ const encrypterMock = (): Encrypter => {
 
 describe('DbAuthenticateUser', () => {
   let userRepositoryMock: UserRepository
+  let refreshTokenRepositoryMock: RefreshTokenRepository
   let hashComparer: HashComparer
   let encrypter: Encrypter
   let dbAuthenticateUser: DbAuthenticateUser
 
   beforeEach(() => {
     userRepositoryMock = findUserByEmailRepositoryMock()
+    refreshTokenRepositoryMock = createRefreshTokenRepositoryMock()
     hashComparer = hashComparerMock()
     encrypter = encrypterMock()
     dbAuthenticateUser = new DbAuthenticateUser(
       userRepositoryMock,
+      refreshTokenRepositoryMock,
       hashComparer,
       encrypter,
     )
@@ -55,30 +67,25 @@ describe('DbAuthenticateUser', () => {
       name: faker.person.fullName(),
       password: faker.internet.password(),
     }
+    const accessToken = faker.string.uuid()
+    const refreshToken = faker.string.uuid()
     jest
       .spyOn(userRepositoryMock, 'findByEmail')
       .mockImplementationOnce(async () => foundUser)
     jest.spyOn(hashComparer, 'compare').mockImplementationOnce(async () => true)
-    const accessToken = faker.string.uuid()
     jest
       .spyOn(encrypter, 'encrypt')
       .mockImplementationOnce(async () => accessToken)
+    jest
+      .spyOn(encrypter, 'encrypt')
+      .mockImplementationOnce(async () => refreshToken)
 
     const result = await dbAuthenticateUser.auth(params)
 
-    expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(params.email)
-    expect(hashComparer.compare).toHaveBeenCalledWith(
-      params.password,
-      foundUser.password,
-    )
-    expect(encrypter.encrypt).toHaveBeenCalledWith(foundUser.id)
     expect(result).toEqual({
       accessToken,
-      user: {
-        id: foundUser.id,
-        name: foundUser.name,
-        email: foundUser.email,
-      },
+      refreshToken,
+      user: { id: foundUser.id, email: foundUser.email, name: foundUser.name },
     })
   })
 

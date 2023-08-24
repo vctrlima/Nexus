@@ -1,3 +1,10 @@
 export interface Decrypter {
-  decrypt: (cipherText: string) => Promise<string>
+  decrypt: (params: Decrypter.Params) => Promise<any>
+}
+
+export namespace Decrypter {
+  export interface Params {
+    cipherText: string
+    secret: string
+  }
 }

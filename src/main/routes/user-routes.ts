@@ -1,5 +1,6 @@
 import { adaptRoute } from '@/main/adapters'
 import {
+  makeAuthenticateUserController,
   makeCreateUserController,
   makeDeleteUserController,
   makeFindUserByIdController,
@@ -12,4 +13,5 @@ export default (router: Router) => {
   router.get('/user/:id', adaptRoute(makeFindUserByIdController()))
   router.put('/user/:id', adaptRoute(makeUpdateUserController()))
   router.delete('/user/:id', adaptRoute(makeDeleteUserController()))
+  router.post('/login', adaptRoute(makeAuthenticateUserController()))
 }
