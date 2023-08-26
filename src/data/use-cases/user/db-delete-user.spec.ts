@@ -1,34 +1,30 @@
-import { UserRepository } from '@/data/protocols/db'
+import { DeleteUserRepository } from '@/data/protocols/db'
 import { faker } from '@faker-js/faker'
 import { DbDeleteUser } from './db-delete-user'
 
-const createUserRepositoryMock = (): UserRepository => {
+const deleteUserRepositoryMock = (): DeleteUserRepository => {
   return {
-    create: jest.fn(),
-    findById: jest.fn(),
-    findByEmail: jest.fn(),
-    update: jest.fn(),
     delete: jest.fn(),
-  } as UserRepository
+  } as DeleteUserRepository
 }
 
 describe('DbDeleteUser', () => {
-  let userRepositoryMock: UserRepository
+  let deleteUserRepository: DeleteUserRepository
   let dbDeleteUser: DbDeleteUser
 
   beforeEach(() => {
-    userRepositoryMock = createUserRepositoryMock()
-    dbDeleteUser = new DbDeleteUser(userRepositoryMock)
+    deleteUserRepository = deleteUserRepositoryMock()
+    dbDeleteUser = new DbDeleteUser(deleteUserRepository)
   })
 
   it('should delete an user by id', async () => {
     const userId = faker.string.uuid()
     jest
-      .spyOn(userRepositoryMock, 'delete')
+      .spyOn(deleteUserRepository, 'delete')
       .mockImplementationOnce(() => Promise.resolve())
 
     await dbDeleteUser.delete(userId)
 
-    expect(userRepositoryMock.delete).toHaveBeenCalledWith(userId)
+    expect(deleteUserRepository.delete).toHaveBeenCalledWith(userId)
   })
 })

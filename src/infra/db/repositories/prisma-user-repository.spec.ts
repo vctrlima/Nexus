@@ -1,8 +1,20 @@
-import { UserRepository } from '@/data/protocols/db'
+import {
+  CreateUserRepository,
+  DeleteUserRepository,
+  FindUserByEmailRepository,
+  FindUserByIdRepository,
+  UpdateUserRepository,
+} from '@/data/protocols/db'
 import { ServerError } from '@/presentation/errors'
 import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
 import { PrismaUserRepository } from './prisma-user-repository'
+
+type UserRepository = CreateUserRepository &
+  FindUserByEmailRepository &
+  FindUserByIdRepository &
+  UpdateUserRepository &
+  DeleteUserRepository
 
 const prismaClientMock = (): PrismaClient =>
   ({

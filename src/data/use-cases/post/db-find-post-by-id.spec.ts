@@ -1,24 +1,21 @@
-import { PostRepository } from '@/data/protocols/db'
+import { FindPostByIdRepository } from '@/data/protocols/db'
 import { FindPostById } from '@/domain/use-cases'
 import { faker } from '@faker-js/faker'
 import { DbFindPostById } from './db-find-post-by-id'
 
-const createPostRepositoryMock = (): PostRepository => {
+const findPostByIdRepositoryMock = (): FindPostByIdRepository => {
   return {
-    create: jest.fn(),
     findById: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  } as PostRepository
+  } as FindPostByIdRepository
 }
 
 describe('DbFindPostById', () => {
-  let postRepositoryMock: PostRepository
+  let findPostByIdRepository: FindPostByIdRepository
   let dbFindPostById: DbFindPostById
 
   beforeEach(() => {
-    postRepositoryMock = createPostRepositoryMock()
-    dbFindPostById = new DbFindPostById(postRepositoryMock)
+    findPostByIdRepository = findPostByIdRepositoryMock()
+    dbFindPostById = new DbFindPostById(findPostByIdRepository)
   })
 
   it('should find a post by id', async () => {
@@ -35,12 +32,12 @@ describe('DbFindPostById', () => {
       },
     }
     jest
-      .spyOn(postRepositoryMock, 'findById')
+      .spyOn(findPostByIdRepository, 'findById')
       .mockImplementationOnce(async () => foundPost)
 
     const result = await dbFindPostById.find(postId)
 
-    expect(postRepositoryMock.findById).toHaveBeenCalledWith(postId)
+    expect(findPostByIdRepository.findById).toHaveBeenCalledWith(postId)
     expect(result).toEqual(foundPost)
   })
 })

@@ -1,24 +1,23 @@
-import { RefreshTokenRepository } from '@/data/protocols/db'
+import { CreateRefreshTokenRepository } from '@/data/protocols/db'
 import { CreateRefreshToken } from '@/domain/use-cases'
 import { faker } from '@faker-js/faker'
 import { DbCreateRefreshToken } from './db-create-refresh-token'
 
-const createRefreshTokenRepositoryMock = (): RefreshTokenRepository => {
+const createRefreshTokenRepositoryMock = (): CreateRefreshTokenRepository => {
   return {
     create: jest.fn(),
-    findById: jest.fn(),
-    delete: jest.fn(),
-    revokeByUserId: jest.fn(),
-  } as RefreshTokenRepository
+  } as CreateRefreshTokenRepository
 }
 
 describe('DbCreateRefreshToken', () => {
-  let refreshTokenRepositoryMock: RefreshTokenRepository
+  let createRefreshTokenRepository: CreateRefreshTokenRepository
   let dbCreateRefreshToken: DbCreateRefreshToken
 
   beforeEach(() => {
-    refreshTokenRepositoryMock = createRefreshTokenRepositoryMock()
-    dbCreateRefreshToken = new DbCreateRefreshToken(refreshTokenRepositoryMock)
+    createRefreshTokenRepository = createRefreshTokenRepositoryMock()
+    dbCreateRefreshToken = new DbCreateRefreshToken(
+      createRefreshTokenRepository,
+    )
   })
 
   it('should create a refresh token', async () => {
@@ -33,12 +32,14 @@ describe('DbCreateRefreshToken', () => {
       revoked: false,
     }
     jest
-      .spyOn(refreshTokenRepositoryMock, 'create')
+      .spyOn(createRefreshTokenRepository, 'create')
       .mockImplementationOnce(async () => createdRefreshToken)
 
     const result = await dbCreateRefreshToken.create(createParams)
 
-    expect(refreshTokenRepositoryMock.create).toHaveBeenCalledWith(createParams)
+    expect(createRefreshTokenRepository.create).toHaveBeenCalledWith(
+      createParams,
+    )
     expect(result).toEqual(createdRefreshToken)
   })
 })

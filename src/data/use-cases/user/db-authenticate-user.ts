@@ -1,5 +1,5 @@
 import { Encrypter, HashComparer } from '@/data/protocols/cryptography'
-import { UserRepository } from '@/data/protocols/db'
+import { FindUserByEmailRepository } from '@/data/protocols/db'
 import { AuthenticateUser, CreateRefreshToken } from '@/domain/use-cases'
 import { uuidV4 } from '@/helpers/string'
 import env from '@/main/config/env'
@@ -7,14 +7,14 @@ import { AccessDeniedError } from '@/presentation/errors'
 
 export class DbAuthenticateUser implements AuthenticateUser {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly findUserByEmailRepository: FindUserByEmailRepository,
     private readonly createRefreshToken: CreateRefreshToken,
     private readonly hashComparer: HashComparer,
     private readonly encrypter: Encrypter,
   ) {}
 
   async auth(params: AuthenticateUser.Params): Promise<AuthenticateUser.Model> {
-    const user = await this.userRepository.findByEmail(params.email)
+    const user = await this.findUserByEmailRepository.findByEmail(params.email)
     if (!user) throw new AccessDeniedError()
     const isValid = await this.hashComparer.compare(
       params.password,

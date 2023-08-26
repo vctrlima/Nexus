@@ -1,34 +1,33 @@
-import { RefreshTokenRepository } from '@/data/protocols/db'
+import { DeleteRefreshTokenRepository } from '@/data/protocols/db'
 import { faker } from '@faker-js/faker'
 import { DbDeleteRefreshToken } from './db-delete-refresh-token'
 
-const deleteRefreshTokenRepositoryMock = (): RefreshTokenRepository => {
+const deleteRefreshTokenRepositoryMock = (): DeleteRefreshTokenRepository => {
   return {
-    create: jest.fn(),
-    findById: jest.fn(),
     delete: jest.fn(),
-    revokeByUserId: jest.fn(),
-  } as RefreshTokenRepository
+  } as DeleteRefreshTokenRepository
 }
 
 describe('DbDeleteRefreshToken', () => {
-  let refreshTokenRepositoryMock: RefreshTokenRepository
+  let deleteRefreshTokenRepository: DeleteRefreshTokenRepository
   let dbDeleteRefreshToken: DbDeleteRefreshToken
 
   beforeEach(() => {
-    refreshTokenRepositoryMock = deleteRefreshTokenRepositoryMock()
-    dbDeleteRefreshToken = new DbDeleteRefreshToken(refreshTokenRepositoryMock)
+    deleteRefreshTokenRepository = deleteRefreshTokenRepositoryMock()
+    dbDeleteRefreshToken = new DbDeleteRefreshToken(
+      deleteRefreshTokenRepository,
+    )
   })
 
   it('should delete a refresh token by id', async () => {
     const refreshTokenId = faker.string.uuid()
     jest
-      .spyOn(refreshTokenRepositoryMock, 'delete')
+      .spyOn(deleteRefreshTokenRepository, 'delete')
       .mockImplementationOnce(() => Promise.resolve())
 
     await dbDeleteRefreshToken.delete(refreshTokenId)
 
-    expect(refreshTokenRepositoryMock.delete).toHaveBeenCalledWith(
+    expect(deleteRefreshTokenRepository.delete).toHaveBeenCalledWith(
       refreshTokenId,
     )
   })

@@ -1,9 +1,20 @@
-import { PostRepository } from '@/data/protocols/db'
+import {
+  CreatePostRepository,
+  DeletePostRepository,
+  FindPostByIdRepository,
+  UpdatePostRepository,
+} from '@/data/protocols/db'
 import { Post, User } from '@/domain/entities'
 import { ServerError } from '@/presentation/errors'
 import { PrismaClient } from '@prisma/client'
 
-export class PrismaPostRepository implements PostRepository {
+export class PrismaPostRepository
+  implements
+    CreatePostRepository,
+    FindPostByIdRepository,
+    UpdatePostRepository,
+    DeletePostRepository
+{
   constructor(private readonly prisma: PrismaClient) {}
 
   async create(post: Post): Promise<{ id: string }> {

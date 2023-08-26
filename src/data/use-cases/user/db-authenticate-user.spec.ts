@@ -1,27 +1,23 @@
 import { Encrypter, HashComparer } from '@/data/protocols/cryptography'
-import { RefreshTokenRepository, UserRepository } from '@/data/protocols/db'
+import {
+  CreateRefreshTokenRepository,
+  FindUserByEmailRepository,
+} from '@/data/protocols/db'
 import { FindUserByEmail } from '@/domain/use-cases'
 import { AccessDeniedError } from '@/presentation/errors'
 import { faker } from '@faker-js/faker'
 import { DbAuthenticateUser } from './db-authenticate-user'
 
-const findUserByEmailRepositoryMock = (): UserRepository => {
+const findUserByEmailRepositoryMock = (): FindUserByEmailRepository => {
   return {
-    create: jest.fn(),
-    findById: jest.fn(),
     findByEmail: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  } as UserRepository
+  } as FindUserByEmailRepository
 }
 
-const createRefreshTokenRepositoryMock = (): RefreshTokenRepository => {
+const createRefreshTokenRepositoryMock = (): CreateRefreshTokenRepository => {
   return {
     create: jest.fn(),
-    findById: jest.fn(),
-    delete: jest.fn(),
-    revokeByUserId: jest.fn(),
-  } as RefreshTokenRepository
+  } as CreateRefreshTokenRepository
 }
 
 const hashComparerMock = (): HashComparer => {
@@ -37,20 +33,20 @@ const encrypterMock = (): Encrypter => {
 }
 
 describe('DbAuthenticateUser', () => {
-  let userRepositoryMock: UserRepository
-  let refreshTokenRepositoryMock: RefreshTokenRepository
+  let findUserByEmailRepository: FindUserByEmailRepository
+  let createRefreshTokenRepository: CreateRefreshTokenRepository
   let hashComparer: HashComparer
   let encrypter: Encrypter
   let dbAuthenticateUser: DbAuthenticateUser
 
   beforeEach(() => {
-    userRepositoryMock = findUserByEmailRepositoryMock()
-    refreshTokenRepositoryMock = createRefreshTokenRepositoryMock()
+    findUserByEmailRepository = findUserByEmailRepositoryMock()
+    createRefreshTokenRepository = createRefreshTokenRepositoryMock()
     hashComparer = hashComparerMock()
     encrypter = encrypterMock()
     dbAuthenticateUser = new DbAuthenticateUser(
-      userRepositoryMock,
-      refreshTokenRepositoryMock,
+      findUserByEmailRepository,
+      createRefreshTokenRepository,
       hashComparer,
       encrypter,
     )
@@ -70,7 +66,7 @@ describe('DbAuthenticateUser', () => {
     const accessToken = faker.string.uuid()
     const refreshToken = faker.string.uuid()
     jest
-      .spyOn(userRepositoryMock, 'findByEmail')
+      .spyOn(findUserByEmailRepository, 'findByEmail')
       .mockImplementationOnce(async () => foundUser)
     jest.spyOn(hashComparer, 'compare').mockImplementationOnce(async () => true)
     jest
@@ -95,8 +91,8 @@ describe('DbAuthenticateUser', () => {
       password: faker.internet.password(),
     }
     jest
-      .spyOn(userRepositoryMock, 'findByEmail')
-      .mockImplementationOnce(async () => null)
+      .spyOn(findUserByEmailRepository, 'findByEmail')
+      .mockImplementationOnce(async () => null as any)
 
     const promise = dbAuthenticateUser.auth(params)
 
@@ -115,7 +111,7 @@ describe('DbAuthenticateUser', () => {
       password: faker.internet.password(),
     }
     jest
-      .spyOn(userRepositoryMock, 'findByEmail')
+      .spyOn(findUserByEmailRepository, 'findByEmail')
       .mockImplementationOnce(async () => foundUser)
 
     const promise = dbAuthenticateUser.auth(params)
@@ -135,7 +131,7 @@ describe('DbAuthenticateUser', () => {
       password: faker.internet.password(),
     }
     jest
-      .spyOn(userRepositoryMock, 'findByEmail')
+      .spyOn(findUserByEmailRepository, 'findByEmail')
       .mockImplementationOnce(async () => foundUser)
     jest
       .spyOn(hashComparer, 'compare')

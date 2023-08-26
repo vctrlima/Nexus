@@ -1,14 +1,14 @@
-import { RefreshTokenRepository } from '@/data/protocols/db'
+import { DeleteRefreshTokenRepository } from '@/data/protocols/db'
 import { DeleteRefreshToken } from '@/domain/use-cases'
 
 export class DbDeleteRefreshToken implements DeleteRefreshToken {
   constructor(
-    private readonly refreshTokenRepository: RefreshTokenRepository,
+    private readonly deleteRefreshTokenRepository: DeleteRefreshTokenRepository,
   ) {}
 
   async delete(
     id: DeleteRefreshToken.Params,
   ): Promise<DeleteRefreshToken.Model> {
-    return await this.refreshTokenRepository.delete(id)
+    return await this.deleteRefreshTokenRepository.delete(id)
   }
 }

@@ -1,25 +1,23 @@
-import { RefreshTokenRepository } from '@/data/protocols/db'
+import { FindRefreshTokenByIdRepository } from '@/data/protocols/db'
 import { FindRefreshTokenById } from '@/domain/use-cases'
 import { faker } from '@faker-js/faker'
 import { DbFindRefreshTokenById } from './db-find-refresh-token-by-id'
 
-const findRefreshTokenByIdRepositoryMock = (): RefreshTokenRepository => {
-  return {
-    create: jest.fn(),
-    findById: jest.fn(),
-    delete: jest.fn(),
-    revokeByUserId: jest.fn(),
-  } as RefreshTokenRepository
-}
+const findRefreshTokenByIdRepositoryMock =
+  (): FindRefreshTokenByIdRepository => {
+    return {
+      findById: jest.fn(),
+    } as FindRefreshTokenByIdRepository
+  }
 
 describe('DbFindRefreshTokenById', () => {
-  let refreshTokenRepositoryMock: RefreshTokenRepository
+  let findRefreshTokenByIdRepository: FindRefreshTokenByIdRepository
   let dbFindRefreshTokenById: DbFindRefreshTokenById
 
   beforeEach(() => {
-    refreshTokenRepositoryMock = findRefreshTokenByIdRepositoryMock()
+    findRefreshTokenByIdRepository = findRefreshTokenByIdRepositoryMock()
     dbFindRefreshTokenById = new DbFindRefreshTokenById(
-      refreshTokenRepositoryMock,
+      findRefreshTokenByIdRepository,
     )
   })
 
@@ -31,12 +29,12 @@ describe('DbFindRefreshTokenById', () => {
       revoked: false,
     }
     jest
-      .spyOn(refreshTokenRepositoryMock, 'findById')
+      .spyOn(findRefreshTokenByIdRepository, 'findById')
       .mockImplementationOnce(async () => foundRefreshToken)
 
     const result = await dbFindRefreshTokenById.find(id)
 
-    expect(refreshTokenRepositoryMock.findById).toHaveBeenCalledWith(id)
+    expect(findRefreshTokenByIdRepository.findById).toHaveBeenCalledWith(id)
     expect(result).toEqual(foundRefreshToken)
   })
 })

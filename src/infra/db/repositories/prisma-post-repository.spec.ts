@@ -1,9 +1,19 @@
-import { PostRepository } from '@/data/protocols/db'
+import {
+  CreatePostRepository,
+  DeletePostRepository,
+  FindPostByIdRepository,
+  UpdatePostRepository,
+} from '@/data/protocols/db'
 import { Post, User } from '@/domain/entities'
 import { ServerError } from '@/presentation/errors'
 import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
 import { PrismaPostRepository } from './prisma-post-repository'
+
+type PostRepository = CreatePostRepository &
+  FindPostByIdRepository &
+  UpdatePostRepository &
+  DeletePostRepository
 
 const prismaClientMock = (): PrismaClient =>
   ({

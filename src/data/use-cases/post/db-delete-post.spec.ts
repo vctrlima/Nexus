@@ -1,33 +1,30 @@
-import { PostRepository } from '@/data/protocols/db'
+import { DeletePostRepository } from '@/data/protocols/db'
 import { faker } from '@faker-js/faker'
 import { DbDeletePost } from './db-delete-post'
 
-const createPostRepositoryMock = (): PostRepository => {
+const deletePostRepositoryMock = (): DeletePostRepository => {
   return {
-    create: jest.fn(),
-    findById: jest.fn(),
-    update: jest.fn(),
     delete: jest.fn(),
-  } as PostRepository
+  } as DeletePostRepository
 }
 
 describe('DbDeletePost', () => {
-  let postRepositoryMock: PostRepository
+  let deletePostRepository: DeletePostRepository
   let dbDeletePost: DbDeletePost
 
   beforeEach(() => {
-    postRepositoryMock = createPostRepositoryMock()
-    dbDeletePost = new DbDeletePost(postRepositoryMock)
+    deletePostRepository = deletePostRepositoryMock()
+    dbDeletePost = new DbDeletePost(deletePostRepository)
   })
 
   it('should delete a post by id', async () => {
     const postId = faker.string.uuid()
     jest
-      .spyOn(postRepositoryMock, 'delete')
+      .spyOn(deletePostRepository, 'delete')
       .mockImplementationOnce(() => Promise.resolve())
 
     await dbDeletePost.delete(postId)
 
-    expect(postRepositoryMock.delete).toHaveBeenCalledWith(postId)
+    expect(deletePostRepository.delete).toHaveBeenCalledWith(postId)
   })
 })

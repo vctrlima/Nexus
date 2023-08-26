@@ -1,3 +1,3 @@
-export * from './post-repository'
-export * from './refresh-token-repository'
-export * from './user-repository'
+export * from './post'
+export * from './refresh-token'
+export * from './user'

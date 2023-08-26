@@ -1,9 +1,19 @@
-import { RefreshTokenRepository } from '@/data/protocols/db'
+import {
+  CreateRefreshTokenRepository,
+  DeleteRefreshTokenRepository,
+  FindRefreshTokenByIdRepository,
+  RevokeRefreshTokenByUserIdRepository,
+} from '@/data/protocols/db'
 import { RefreshToken } from '@/domain/entities'
 import { ServerError } from '@/presentation/errors'
 import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
 import { PrismaRefreshTokenRepository } from './prisma-refresh-token-repository'
+
+type RefreshTokenRepository = CreateRefreshTokenRepository &
+  FindRefreshTokenByIdRepository &
+  DeleteRefreshTokenRepository &
+  RevokeRefreshTokenByUserIdRepository
 
 const prismaClientMock = (): PrismaClient =>
   ({

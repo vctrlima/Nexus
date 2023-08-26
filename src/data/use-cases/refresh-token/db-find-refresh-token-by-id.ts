@@ -1,14 +1,14 @@
-import { RefreshTokenRepository } from '@/data/protocols/db'
+import { FindRefreshTokenByIdRepository } from '@/data/protocols/db'
 import { FindRefreshTokenById } from '@/domain/use-cases'
 
 export class DbFindRefreshTokenById implements FindRefreshTokenById {
   constructor(
-    private readonly refreshTokenRepository: RefreshTokenRepository,
+    private readonly findRefreshTokenByIdRepository: FindRefreshTokenByIdRepository,
   ) {}
 
   async find(
     id: FindRefreshTokenById.Params,
   ): Promise<FindRefreshTokenById.Model> {
-    return await this.refreshTokenRepository.findById(id)
+    return await this.findRefreshTokenByIdRepository.findById(id)
   }
 }

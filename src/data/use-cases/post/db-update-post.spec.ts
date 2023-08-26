@@ -1,23 +1,22 @@
-import { PostRepository } from '@/data/protocols/db'
+import { UpdatePostRepository } from '@/data/protocols/db'
 import { Post } from '@/domain/entities'
 import { UpdatePost } from '@/domain/use-cases'
 import { faker } from '@faker-js/faker'
 import { DbUpdatePost } from './db-update-post'
 
-const postRepositoryMock = (): PostRepository => ({
-  create: jest.fn(),
-  findById: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-})
+const updatePostRepositoryMock = (): UpdatePostRepository => {
+  return {
+    update: jest.fn(),
+  } as UpdatePostRepository
+}
 
 describe('DbUpdatePost', () => {
-  let postRepository: PostRepository
+  let updatePostRepository: UpdatePostRepository
   let dbUpdatePost: UpdatePost
 
   beforeEach(() => {
-    postRepository = postRepositoryMock()
-    dbUpdatePost = new DbUpdatePost(postRepository)
+    updatePostRepository = updatePostRepositoryMock()
+    dbUpdatePost = new DbUpdatePost(updatePostRepository)
   })
 
   it('should update a post', async () => {
@@ -36,12 +35,12 @@ describe('DbUpdatePost', () => {
     }
     const updatedPost = updateData
     jest
-      .spyOn(postRepository, 'update')
+      .spyOn(updatePostRepository, 'update')
       .mockImplementationOnce(async () => updatedPost)
 
     const result = await dbUpdatePost.update(updateData)
 
-    expect(postRepository.update).toHaveBeenCalledWith(updateData)
+    expect(updatePostRepository.update).toHaveBeenCalledWith(updateData)
     expect(result).toEqual(updatedPost)
   })
 })

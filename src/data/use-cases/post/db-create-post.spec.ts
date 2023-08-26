@@ -1,24 +1,21 @@
-import { PostRepository } from '@/data/protocols/db'
+import { CreatePostRepository } from '@/data/protocols/db'
 import { CreatePost } from '@/domain/use-cases'
 import { faker } from '@faker-js/faker'
 import { DbCreatePost } from './db-create-post'
 
-const createPostRepositoryMock = (): PostRepository => {
+const createPostRepositoryMock = (): CreatePostRepository => {
   return {
     create: jest.fn(),
-    findById: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  } as PostRepository
+  } as CreatePostRepository
 }
 
 describe('DbCreatePost', () => {
-  let postRepositoryMock: PostRepository
+  let createPostRepository: CreatePostRepository
   let dbCreatePost: DbCreatePost
 
   beforeEach(() => {
-    postRepositoryMock = createPostRepositoryMock()
-    dbCreatePost = new DbCreatePost(postRepositoryMock)
+    createPostRepository = createPostRepositoryMock()
+    dbCreatePost = new DbCreatePost(createPostRepository)
   })
 
   it('should create a new post', async () => {
@@ -35,12 +32,12 @@ describe('DbCreatePost', () => {
     }
     const createdPost: CreatePost.Model = { id: faker.string.uuid() }
     jest
-      .spyOn(postRepositoryMock, 'create')
+      .spyOn(createPostRepository, 'create')
       .mockImplementationOnce(async () => createdPost)
 
     const result = await dbCreatePost.create(createParams)
 
-    expect(postRepositoryMock.create).toHaveBeenCalledWith(createParams)
+    expect(createPostRepository.create).toHaveBeenCalledWith(createParams)
     expect(result).toEqual(createdPost)
   })
 })

@@ -1,9 +1,22 @@
-import { UserRepository } from '@/data/protocols/db'
+import {
+  CreateUserRepository,
+  DeleteUserRepository,
+  FindUserByEmailRepository,
+  FindUserByIdRepository,
+  UpdateUserRepository,
+} from '@/data/protocols/db'
 import { User } from '@/domain/entities'
 import { ServerError } from '@/presentation/errors'
 import { PrismaClient } from '@prisma/client'
 
-export class PrismaUserRepository implements UserRepository {
+export class PrismaUserRepository
+  implements
+    CreateUserRepository,
+    FindUserByEmailRepository,
+    FindUserByIdRepository,
+    UpdateUserRepository,
+    DeleteUserRepository
+{
   constructor(private readonly prisma: PrismaClient) {}
 
   async create(user: User): Promise<{ id: string }> {

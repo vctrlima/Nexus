@@ -1,17 +1,13 @@
 import { Hasher } from '@/data/protocols/cryptography'
-import { UserRepository } from '@/data/protocols/db'
+import { UpdateUserRepository } from '@/data/protocols/db'
 import { UpdateUser } from '@/domain/use-cases'
 import { faker } from '@faker-js/faker'
 import { DbUpdateUser } from './db-update-user'
 
-const updateUserRepositoryMock = (): UserRepository => {
+const updateUserRepositoryMock = (): UpdateUserRepository => {
   return {
-    create: jest.fn(),
-    findById: jest.fn(),
-    findByEmail: jest.fn(),
     update: jest.fn(),
-    delete: jest.fn(),
-  } as UserRepository
+  } as UpdateUserRepository
 }
 
 const hasherMock = (): Hasher => {
@@ -21,14 +17,14 @@ const hasherMock = (): Hasher => {
 }
 
 describe('DbUpdateUser', () => {
-  let userRepositoryMock: UserRepository
+  let updateUserRepository: UpdateUserRepository
   let hasher: Hasher
   let dbUpdateUser: DbUpdateUser
 
   beforeEach(() => {
-    userRepositoryMock = updateUserRepositoryMock()
+    updateUserRepository = updateUserRepositoryMock()
     hasher = hasherMock()
-    dbUpdateUser = new DbUpdateUser(userRepositoryMock, hasher)
+    dbUpdateUser = new DbUpdateUser(updateUserRepository, hasher)
   })
 
   it('should update an existent user', async () => {
@@ -40,12 +36,12 @@ describe('DbUpdateUser', () => {
     }
     const updatedUser: UpdateUser.Model = { ...updateParams }
     jest
-      .spyOn(userRepositoryMock, 'update')
+      .spyOn(updateUserRepository, 'update')
       .mockImplementationOnce(async () => updatedUser)
 
     const result = await dbUpdateUser.update(updateParams)
 
-    expect(userRepositoryMock.update).toHaveBeenCalledWith(updateParams)
+    expect(updateUserRepository.update).toHaveBeenCalledWith(updateParams)
     expect(result).toEqual(updatedUser)
   })
 })

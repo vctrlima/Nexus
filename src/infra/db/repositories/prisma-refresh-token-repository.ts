@@ -1,10 +1,21 @@
-import { RefreshTokenRepository } from '@/data/protocols/db'
+import {
+  CreateRefreshTokenRepository,
+  DeleteRefreshTokenRepository,
+  FindRefreshTokenByIdRepository,
+  RevokeRefreshTokenByUserIdRepository,
+} from '@/data/protocols/db'
 import { RefreshToken } from '@/domain/entities'
 import { CreateRefreshToken } from '@/domain/use-cases'
 import { ServerError } from '@/presentation/errors'
 import { PrismaClient } from '@prisma/client'
 
-export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
+export class PrismaRefreshTokenRepository
+  implements
+    CreateRefreshTokenRepository,
+    FindRefreshTokenByIdRepository,
+    DeleteRefreshTokenRepository,
+    RevokeRefreshTokenByUserIdRepository
+{
   constructor(private readonly prisma: PrismaClient) {}
 
   async create(params: CreateRefreshToken.Params): Promise<RefreshToken> {

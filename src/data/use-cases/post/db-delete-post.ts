@@ -1,10 +1,10 @@
-import { PostRepository } from '@/data/protocols/db'
+import { DeletePostRepository } from '@/data/protocols/db'
 import { DeletePost } from '@/domain/use-cases'
 
 export class DbDeletePost implements DeletePost {
-  constructor(private readonly postRepository: PostRepository) {}
+  constructor(private readonly deletePostRepository: DeletePostRepository) {}
 
   async delete(id: string): Promise<void> {
-    await this.postRepository.delete(id)
+    await this.deletePostRepository.delete(id)
   }
 }
