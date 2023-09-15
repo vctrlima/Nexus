@@ -20,7 +20,10 @@
     "paths": {
       "@server/*": [
         "./apps/server/src/*"
-      ]
+      ],
+      "@web/*": [
+        "./apps/web/src/*"
+      ],
     }
   },
   "exclude": [
