@@ -1,5 +1,8 @@
 <main>
   <section>
+    <div class="flex justify-center items-center text-7xl mb-10">
+      <nexus-logo></nexus-logo>
+    </div>
     <form [formGroup]="register" (ngSubmit)="submitForm()">
       <input type="text" formControlName="name" placeholder="Your name" />
       <input type="email" formControlName="email" placeholder="Email" />

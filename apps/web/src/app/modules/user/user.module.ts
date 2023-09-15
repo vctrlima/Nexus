@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LogoModule } from '@web/app/shared/components/logo/logo.module';
 import { AuthService } from './services';
 import { UserRoutingModule } from './user-routing.module';
 import { LoginComponent } from './views';
@@ -13,6 +14,7 @@ import { RegisterComponent } from './views/register/register.component';
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
+    LogoModule,
     UserRoutingModule,
   ],
   providers: [AuthService],
