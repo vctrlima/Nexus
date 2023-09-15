@@ -1,0 +1,14 @@
+<main>
+  <section>
+    <form [formGroup]="login" (ngSubmit)="submitForm()">
+      <input type="email" formControlName="email" placeholder="Email" />
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Password"
+      />
+      <button type="submit" [disabled]="!login.valid">Login</button>
+    </form>
+    <a [routerLink]="['/register']">Don't have an account?<br />Create now!</a>
+  </section>
+</main>

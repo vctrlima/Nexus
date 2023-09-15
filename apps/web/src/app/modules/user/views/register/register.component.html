@@ -1,0 +1,30 @@
+<main>
+  <section>
+    <form [formGroup]="register" (ngSubmit)="submitForm()">
+      <input type="text" formControlName="name" placeholder="Your name" />
+      <input type="email" formControlName="email" placeholder="Email" />
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Password"
+      />
+      <input
+        type="password"
+        formControlName="passwordRepeat"
+        placeholder="Password confirmation"
+      />
+      <button
+        type="submit"
+        [disabled]="
+          !register.valid ||
+          register.value.password !== register.value.passwordRepeat
+        "
+      >
+        Create account
+      </button>
+    </form>
+    <a [routerLink]="['/login']">
+      Do you already have an account?<br />Log in here!
+    </a>
+  </section>
+</main>

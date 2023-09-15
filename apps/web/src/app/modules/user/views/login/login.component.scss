@@ -1,0 +1,43 @@
+main {
+  @apply w-screen
+    h-screen
+    flex
+    flex-col
+    items-center
+    justify-center;
+
+  > section {
+    @apply p-8
+      w-full
+      max-w-sm;
+
+    > form {
+      @apply grid
+        grid-cols-1
+        gap-6
+        w-full
+        place-content-center
+        mb-8;
+
+      > input {
+        @apply input
+          input-bordered
+          w-full;
+      }
+
+      > button {
+        @apply btn
+          btn-primary
+          w-full;
+      }
+    }
+
+    > a {
+      @apply link
+        w-full
+        flex
+        justify-center
+        text-center;
+    }
+  }
+}
