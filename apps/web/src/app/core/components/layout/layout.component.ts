@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'nexus-layout',
-  styleUrls: ['./main.component.scss'],
+  styleUrls: ['./layout.component.scss'],
   template: `
     <nexus-header></nexus-header>
     <main class="content">
@@ -10,4 +10,4 @@ import { Component } from '@angular/core';
     </main>
   `,
 })
-export class MainLayoutComponent {}
+export class LayoutComponent {}

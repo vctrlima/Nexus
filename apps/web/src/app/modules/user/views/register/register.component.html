@@ -1,9 +1,9 @@
-<main>
+<main class="register-wrap">
   <section>
     <div class="flex justify-center items-center text-7xl mb-10">
-      <nexus-logo></nexus-logo>
+      <nexus-logo [extended]="true"></nexus-logo>
     </div>
-    <form [formGroup]="register" (ngSubmit)="submitForm()">
+    <form [formGroup]="register" (ngSubmit)="submitForm()" autocomplete="off">
       <input type="text" formControlName="name" placeholder="Your name" />
       <input type="email" formControlName="email" placeholder="Email" />
       <input

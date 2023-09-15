@@ -3,14 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
+import { LayoutModule } from './core/components/layout/layout.module';
 import { UserModule } from './modules/user/user.module';
-import { MainModule } from './shared/layouts/main/main.module';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    MainModule,
+    LayoutModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     UserModule,
   ],

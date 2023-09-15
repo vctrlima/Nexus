@@ -1,21 +1,21 @@
 import { Route } from '@angular/router';
-import { MainLayoutComponent } from './shared/layouts/main/main.component';
+import { LayoutComponent } from './core/components/layout/layout.component';
 
 export const appRoutes: Route[] = [
   {
     path: '',
-    component: MainLayoutComponent,
+    component: LayoutComponent,
     children: [
       {
         path: '',
         loadChildren: () =>
           import('./modules/home/home.module').then((m) => m.HomeModule),
       },
+      {
+        path: '',
+        loadChildren: () =>
+          import('./modules/user/user.module').then((m) => m.UserModule),
+      },
     ],
-  },
-  {
-    path: 'user',
-    loadChildren: () =>
-      import('./modules/user/user.module').then((m) => m.UserModule),
   },
 ];

@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'nexus-root',
   template: `<router-outlet></router-outlet>`,
 })
-export class AppComponent {
-  title = 'web';
-}
+export class AppComponent {}
