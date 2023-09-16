@@ -20,10 +20,15 @@
         type="submit"
         [disabled]="
           !register.valid ||
-          register.value.password !== register.value.passwordRepeat
+          register.value.password !== register.value.passwordRepeat ||
+          loading
         "
       >
-        Create account
+        <span
+          class="loading loading-spinner"
+          *ngIf="loading; else submitFormLabel"
+        ></span>
+        <ng-template #submitFormLabel>Create account</ng-template>
       </button>
     </form>
     <a [routerLink]="['/login']">
