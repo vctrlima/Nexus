@@ -1,29 +1,34 @@
-import { FindUserByToken } from '@server/domain/use-cases'
-import { AccessDeniedError } from '@server/presentation/errors'
-import { forbidden, ok, serverError } from '@server/presentation/helpers'
-import { HttpResponse, Middleware } from '@server/presentation/protocols'
+import { FindUserByToken } from '@server/domain/use-cases';
+import { AccessDeniedError } from '@server/presentation/errors';
+import {
+  forbidden,
+  ok,
+  serverError,
+  unauthorized,
+} from '@server/presentation/helpers';
+import { HttpResponse, Middleware } from '@server/presentation/protocols';
 
 export class AuthMiddleware implements Middleware {
   constructor(private readonly findUserByToken: FindUserByToken) {}
 
   async handle(request: AuthMiddleware.Request): Promise<HttpResponse> {
     try {
-      const { accessToken } = request
+      const { accessToken } = request;
       if (accessToken) {
-        const user = await this.findUserByToken.findUserByToken(accessToken)
+        const user = await this.findUserByToken.findUserByToken(accessToken);
         if (user) {
-          return ok({ userId: user.id })
+          return ok({ userId: user.id });
         }
       }
-      return forbidden(new AccessDeniedError())
+      return forbidden(new AccessDeniedError());
     } catch (error) {
-      return serverError(error)
+      return unauthorized();
     }
   }
 }
 
 export namespace AuthMiddleware {
   export interface Request {
-    accessToken?: string
+    accessToken?: string;
   }
 }
