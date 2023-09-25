@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@web/environments/environment';
 
 @Injectable()
-export class AuthService {
+export class UserApiService {
   private readonly apiUrl = environment.apiUrl;
 
   constructor(private readonly httpClient: HttpClient) {}

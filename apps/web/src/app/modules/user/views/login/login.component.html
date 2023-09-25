@@ -10,7 +10,13 @@
         formControlName="password"
         placeholder="Password"
       />
-      <button type="submit" [disabled]="!login.valid">Login</button>
+      <button type="submit" [disabled]="!login.valid || loading">
+        <span
+          class="loading loading-spinner"
+          *ngIf="loading; else submitFormLabel"
+        ></span>
+        <ng-template #submitFormLabel>Login</ng-template>
+      </button>
     </form>
     <a [routerLink]="['/register']">Don't have an account?<br />Create now!</a>
   </section>

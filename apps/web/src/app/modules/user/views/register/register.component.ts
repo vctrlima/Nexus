@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '@web/modules/user/services';
+import { Router } from '@angular/router';
+import { AuthService } from '@web/app/core/services';
+import { UserApiService } from '@web/modules/user/services';
 
 @Component({
   selector: 'nexus-register',
@@ -8,6 +10,8 @@ import { AuthService } from '@web/modules/user/services';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+  public loading = false;
+
   public register = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     name: new FormControl('', Validators.required),
@@ -15,7 +19,11 @@ export class RegisterComponent {
     passwordRepeat: new FormControl('', Validators.required),
   });
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userApiService: UserApiService,
+    private readonly router: Router
+  ) {}
 
   public submitForm(): void {
     if (!this.register.valid) return;
@@ -31,8 +39,12 @@ export class RegisterComponent {
       password: this.register.value.password,
       name: this.register.value.name,
     };
-    this.authService.register(params).subscribe((response) => {
-      if (!response.id) return;
+    this.loading = true;
+    this.userApiService.register(params).subscribe((response) => {
+      if (!response.id) {
+        this.loading = false;
+        return;
+      }
       this.authenticateUser();
     });
   }
@@ -40,14 +52,19 @@ export class RegisterComponent {
   private authenticateUser(): void {
     if (!this.register.value.email) return;
     if (!this.register.value.password) return;
-    this.authService
+    this.userApiService
       .login({
         email: this.register.value.email,
         password: this.register.value.password,
       })
       .subscribe((response) => {
-        // TODO: Handle login response
-        console.log(response);
+        if (!response.user.id) {
+          this.loading = false;
+          return;
+        }
+        this.authService.setSession(response);
+        if (!this.authService.isLoggedIn) return;
+        this.router.navigate(['/']);
       });
   }
 }
