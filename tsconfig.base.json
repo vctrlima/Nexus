@@ -17,7 +17,8 @@
     "paths": {
       "@server/*": ["./apps/server/src/*"],
       "@web/*": ["./apps/web/src/*"],
-      "@web/modules/*": ["./apps/web/src/app/modules/*"]
+      "@web/modules/*": ["./apps/web/src/app/modules/*"],
+      "@web/shared/*": ["./apps/web/src/app/shared/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

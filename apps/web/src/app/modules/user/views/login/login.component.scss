@@ -1,4 +1,4 @@
-main {
+.login-wrap {
   @apply w-screen
     h-screen
     flex
@@ -8,6 +8,7 @@ main {
 
   > section {
     @apply p-8
+      pb-12
       w-full
       max-w-sm;
 

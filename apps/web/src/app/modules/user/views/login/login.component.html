@@ -1,5 +1,8 @@
-<main>
+<main class="login-wrap">
   <section>
+    <div class="flex justify-center items-center text-7xl mb-10">
+      <nexus-logo [extended]="true"></nexus-logo>
+    </div>
     <form [formGroup]="login" (ngSubmit)="submitForm()">
       <input type="email" formControlName="email" placeholder="Email" />
       <input
@@ -7,7 +10,13 @@
         formControlName="password"
         placeholder="Password"
       />
-      <button type="submit" [disabled]="!login.valid">Login</button>
+      <button type="submit" [disabled]="!login.valid || loading">
+        <span
+          class="loading loading-spinner"
+          *ngIf="loading; else submitFormLabel"
+        ></span>
+        <ng-template #submitFormLabel>Login</ng-template>
+      </button>
     </form>
     <a [routerLink]="['/register']">Don't have an account?<br />Create now!</a>
   </section>

@@ -1,6 +1,9 @@
-<main>
+<main class="register-wrap">
   <section>
-    <form [formGroup]="register" (ngSubmit)="submitForm()">
+    <div class="flex justify-center items-center text-7xl mb-10">
+      <nexus-logo [extended]="true"></nexus-logo>
+    </div>
+    <form [formGroup]="register" (ngSubmit)="submitForm()" autocomplete="off">
       <input type="text" formControlName="name" placeholder="Your name" />
       <input type="email" formControlName="email" placeholder="Email" />
       <input
@@ -17,10 +20,15 @@
         type="submit"
         [disabled]="
           !register.valid ||
-          register.value.password !== register.value.passwordRepeat
+          register.value.password !== register.value.passwordRepeat ||
+          loading
         "
       >
-        Create account
+        <span
+          class="loading loading-spinner"
+          *ngIf="loading; else submitFormLabel"
+        ></span>
+        <ng-template #submitFormLabel>Create account</ng-template>
       </button>
     </form>
     <a [routerLink]="['/login']">
