@@ -37,8 +37,17 @@ model Post {
   published Boolean  @default(false)
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
-  like      Like[]
-  list      List[]
+  likes     Like[]
+  lists     List[]
+  topics    Topic[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Topic {
+  id        String   @id @default(uuid())
+  label     String
+  posts     Post[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
