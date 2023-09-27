@@ -1,11 +1,6 @@
 import { FindUserByToken } from '@server/domain/use-cases';
 import { AccessDeniedError } from '@server/presentation/errors';
-import {
-  forbidden,
-  ok,
-  serverError,
-  unauthorized,
-} from '@server/presentation/helpers';
+import { forbidden, ok, unauthorized } from '@server/presentation/helpers';
 import { HttpResponse, Middleware } from '@server/presentation/protocols';
 
 export class AuthMiddleware implements Middleware {

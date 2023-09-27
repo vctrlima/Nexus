@@ -23,7 +23,7 @@ model User {
 model RefreshToken {
   id          String   @id @unique @default(uuid())
   hashedToken String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   revoked     Boolean  @default(false)
   createdAt   DateTime @default(now())
@@ -35,7 +35,7 @@ model Post {
   title     String
   content   String
   published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   like      Like[]
   list      List[]
@@ -48,7 +48,7 @@ model List {
   name        String
   description String
   posts       Post[]
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -56,9 +56,9 @@ model List {
 
 model Like {
   id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
   createdAt DateTime @default(now())
 }
