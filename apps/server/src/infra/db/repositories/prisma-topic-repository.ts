@@ -1,9 +1,14 @@
 import { PrismaClient } from '@prisma/client';
-import { CreateTopicRepository } from '@server/data/protocols/db';
+import {
+  CreateTopicRepository,
+  FindAllTopicsRepository,
+} from '@server/data/protocols/db';
 import { Topic } from '@server/domain/entities';
-import { CreateTopic } from '@server/domain/use-cases';
+import { CreateTopic, FindAllTopics } from '@server/domain/use-cases';
 
-export class PrismaTopicRepository implements CreateTopicRepository {
+export class PrismaTopicRepository
+  implements CreateTopicRepository, FindAllTopicsRepository
+{
   constructor(private readonly prisma: PrismaClient) {}
 
   async create(params: CreateTopic.Params): Promise<Topic> {
@@ -13,5 +18,12 @@ export class PrismaTopicRepository implements CreateTopicRepository {
       },
     });
     return new Topic({ id, label, createdAt, updatedAt });
+  }
+
+  async findAll(): Promise<FindAllTopics.Model> {
+    const topics = await this.prisma.topic.findMany({
+      orderBy: { label: 'asc' },
+    });
+    return topics.map((topic) => new Topic({ ...topic }));
   }
 }

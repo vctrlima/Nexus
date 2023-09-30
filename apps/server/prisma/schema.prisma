@@ -15,7 +15,6 @@ model User {
   refreshTokens RefreshToken[]
   posts         Post[]
   like          Like[]
-  list          List[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -38,7 +37,6 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   likes     Like[]
-  lists     List[]
   topics    Topic[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -46,21 +44,10 @@ model Post {
 
 model Topic {
   id        String   @id @default(uuid())
-  label     String
+  label     String   @unique
   posts     Post[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model List {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  posts       Post[]
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model Like {
