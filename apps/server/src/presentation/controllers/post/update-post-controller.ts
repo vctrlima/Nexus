@@ -1,6 +1,11 @@
-import { UpdatePost } from '@server/domain/use-cases';
+import { FindPostById, UpdatePost } from '@server/domain/use-cases';
 import { MissingParamError } from '@server/presentation/errors';
-import { badRequest, ok, serverError } from '@server/presentation/helpers';
+import {
+  badRequest,
+  ok,
+  serverError,
+  unauthorized,
+} from '@server/presentation/helpers';
 import {
   Controller,
   HttpRequest,
@@ -8,9 +13,11 @@ import {
 } from '@server/presentation/protocols';
 
 export class UpdatePostController implements Controller {
-  constructor(private readonly updatePost: UpdatePost) {}
+  constructor(
+    private readonly updatePost: UpdatePost,
+    private readonly findPostById: FindPostById
+  ) {}
 
-  // TODO: allow the update of posts only by the respective user
   async handle(
     request: HttpRequest<UpdatePost.Params>
   ): Promise<HttpResponse<any>> {
@@ -19,6 +26,8 @@ export class UpdatePostController implements Controller {
       const { id } = request.params;
       if (!body) return badRequest(new MissingParamError('body'));
       body.id = id;
+      const foundPost = await this.findPostById.findById(id);
+      if (foundPost.author.id !== request.user.id) return unauthorized();
       const post = await this.updatePost.update(body);
       return ok(post);
     } catch (error) {

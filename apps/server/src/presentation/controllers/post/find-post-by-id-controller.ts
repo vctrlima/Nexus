@@ -11,7 +11,7 @@ export class FindPostByIdController implements Controller {
   ): Promise<HttpResponse<Post>> {
     try {
       const { id } = request.params
-      const post = await this.findPostById.find(id)
+      const post = await this.findPostById.findById(id)
       return ok(post)
     } catch (error) {
       return serverError(error)

@@ -1,7 +1,5 @@
 import { RevokeRefreshTokenByUserId } from '@server/domain/use-cases';
-import { MissingParamError } from '@server/presentation/errors';
 import {
-  badRequest,
   noContent,
   serverError,
   unauthorized,
