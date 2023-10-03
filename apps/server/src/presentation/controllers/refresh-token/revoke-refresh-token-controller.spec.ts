@@ -1,76 +1,66 @@
-import { RevokeRefreshTokenByUserId } from '@server/domain/use-cases'
-import { faker } from '@faker-js/faker'
-import { RevokeRefreshTokenController } from './revoke-refresh-token-controller'
-import { serverError } from '@server/presentation/helpers'
+import { faker } from '@faker-js/faker';
+import { RevokeRefreshTokenByUserId } from '@server/domain/use-cases';
+import { serverError, unauthorized } from '@server/presentation/helpers';
+import { RevokeRefreshTokenController } from './revoke-refresh-token-controller';
 
 const revokeRefreshTokenByUserIdMock = (): RevokeRefreshTokenByUserId => ({
   revokeByUserId: jest.fn(),
-})
+});
 
 describe('RevokeRefreshTokenController', () => {
-  let revokeRefreshTokenByUserId: RevokeRefreshTokenByUserId
-  let revokeRefreshTokenController: RevokeRefreshTokenController
+  let revokeRefreshTokenByUserId: RevokeRefreshTokenByUserId;
+  let revokeRefreshTokenController: RevokeRefreshTokenController;
 
   beforeEach(() => {
-    revokeRefreshTokenByUserId = revokeRefreshTokenByUserIdMock()
+    revokeRefreshTokenByUserId = revokeRefreshTokenByUserIdMock();
     revokeRefreshTokenController = new RevokeRefreshTokenController(
-      revokeRefreshTokenByUserId,
-    )
-  })
+      revokeRefreshTokenByUserId
+    );
+  });
 
-  it('should return 400 if no body is provided', async () => {
-    const request = { body: undefined }
+  it('should return 401 if no userId is provided', async () => {
+    const request = { user: { id: undefined } };
 
-    const response = await revokeRefreshTokenController.handle(request as any)
+    const response = await revokeRefreshTokenController.handle(request as any);
 
-    expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual(new Error('Missing param: body'))
-  })
-
-  it('should return 400 if no userId is provided', async () => {
-    const request = { body: { userId: undefined } }
-
-    const response = await revokeRefreshTokenController.handle(request as any)
-
-    expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual(new Error('Missing param: userId'))
-  })
+    expect(response).toEqual(unauthorized());
+  });
 
   it('should call RevokeRefreshTokenByUserId with correct values', async () => {
-    const userId = faker.string.uuid()
-    const request = { body: { userId } }
+    const userId = faker.string.uuid();
+    const request = { user: { id: userId } };
 
-    await revokeRefreshTokenController.handle(request as any)
+    await revokeRefreshTokenController.handle(request as any);
 
     expect(revokeRefreshTokenByUserId.revokeByUserId).toHaveBeenCalledWith(
-      userId,
-    )
-  })
+      userId
+    );
+  });
 
   it('should return 204 on success', async () => {
-    const userId = faker.string.uuid()
-    const request = { body: { userId } }
+    const userId = faker.string.uuid();
+    const request = { user: { id: userId } };
 
-    const response = await revokeRefreshTokenController.handle(request as any)
+    const response = await revokeRefreshTokenController.handle(request as any);
 
-    expect(response.statusCode).toBe(204)
-    expect(response.body).toBeNull()
-  })
+    expect(response.statusCode).toBe(204);
+    expect(response.body).toBeNull();
+  });
 
   it('should return 500 if RevokeRefreshTokenByUserId throws', async () => {
-    const userId = faker.string.uuid()
-    const request = { body: { userId } }
+    const userId = faker.string.uuid();
+    const request = { user: { id: userId } };
     jest
       .spyOn(revokeRefreshTokenByUserId, 'revokeByUserId')
-      .mockRejectedValueOnce(new Error('Error revoking refresh token'))
+      .mockRejectedValueOnce(new Error('Error revoking refresh token'));
 
-    const response = await revokeRefreshTokenController.handle(request as any)
+    const response = await revokeRefreshTokenController.handle(request as any);
 
     expect(revokeRefreshTokenByUserId.revokeByUserId).toHaveBeenCalledWith(
-      userId,
-    )
+      userId
+    );
     expect(response).toEqual(
-      serverError(new Error('Error revoking refresh token')),
-    )
-  })
-})
+      serverError(new Error('Error revoking refresh token'))
+    );
+  });
+});
