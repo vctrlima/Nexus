@@ -230,7 +230,7 @@ describe('PrismaPostRepository', () => {
     });
   });
 
-  it('should delete an user by id', async () => {
+  it('should delete a post by id', async () => {
     const postId = faker.string.uuid();
 
     await prismaPostRepository.delete(postId);

@@ -6,7 +6,7 @@ export class DbFindPostById implements FindPostById {
     private readonly findPostByIdRepository: FindPostByIdRepository,
   ) {}
 
-  async find(id: FindPostById.Params): Promise<FindPostById.Model> {
+  async findById(id: FindPostById.Params): Promise<FindPostById.Model> {
     return await this.findPostByIdRepository.findById(id)
   }
 }

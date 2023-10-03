@@ -35,7 +35,7 @@ describe('DbFindPostById', () => {
       .spyOn(findPostByIdRepository, 'findById')
       .mockImplementationOnce(async () => foundPost)
 
-    const result = await dbFindPostById.find(postId)
+    const result = await dbFindPostById.findById(postId)
 
     expect(findPostByIdRepository.findById).toHaveBeenCalledWith(postId)
     expect(result).toEqual(foundPost)

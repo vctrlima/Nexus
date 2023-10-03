@@ -1,4 +1,4 @@
-import { DeletePost, FindPostById } from '@server/domain/use-cases';
+import { DeleteLike, FindLikeById } from '@server/domain/use-cases';
 import {
   noContent,
   serverError,
@@ -10,10 +10,10 @@ import {
   HttpResponse,
 } from '@server/presentation/protocols';
 
-export class DeletePostController implements Controller {
+export class DeleteLikeController implements Controller {
   constructor(
-    private readonly deletePost: DeletePost,
-    private readonly findPostById: FindPostById
+    private readonly deleteLike: DeleteLike,
+    private readonly findLikeById: FindLikeById
   ) {}
 
   async handle(
@@ -21,9 +21,9 @@ export class DeletePostController implements Controller {
   ): Promise<HttpResponse<void>> {
     try {
       const { id } = request.params;
-      const post = await this.findPostById.findById(id);
-      if (post.author.id !== request.user.id) return unauthorized();
-      await this.deletePost.delete(id);
+      const like = await this.findLikeById.findById(id);
+      if (like.user.id !== request.user.id) return unauthorized();
+      await this.deleteLike.delete(id);
       return noContent();
     } catch (error) {
       return serverError(error);

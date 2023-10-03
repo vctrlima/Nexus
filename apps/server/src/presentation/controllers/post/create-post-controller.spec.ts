@@ -14,7 +14,7 @@ const createPostMock = (): CreatePost => ({
 });
 
 const findPostByIdMock = (): FindPostById => ({
-  find: jest.fn(),
+  findById: jest.fn(),
 });
 
 describe('CreatePostController', () => {
@@ -52,7 +52,7 @@ describe('CreatePostController', () => {
       },
     };
     jest
-      .spyOn(findPostById, 'find')
+      .spyOn(findPostById, 'findById')
       .mockImplementationOnce(async () => foundPost);
     const request: HttpRequest<CreatePost.Params> = {
       body: createParams,
@@ -62,7 +62,7 @@ describe('CreatePostController', () => {
     const response = await createPostController.handle(request);
 
     expect(createPost.create).toHaveBeenCalledWith(createParams);
-    expect(findPostById.find).toHaveBeenCalledWith(createdPost.id);
+    expect(findPostById.findById).toHaveBeenCalledWith(createdPost.id);
     expect(response).toEqual(created(foundPost));
   });
 

@@ -27,7 +27,7 @@ export class CreatePostController implements Controller {
       if (!body.author.id) return badRequest(new MissingParamError('authorId'));
       if (body.author.id !== request.user?.id) return unauthorized();
       const { id } = await this.createPost.create(body);
-      const post = await this.findPostById.find(id);
+      const post = await this.findPostById.findById(id);
       return created(post);
     } catch (error) {
       return serverError(error);
