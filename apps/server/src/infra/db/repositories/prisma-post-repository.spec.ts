@@ -4,14 +4,17 @@ import {
   CreatePostRepository,
   DeletePostRepository,
   FindPostByIdRepository,
+  FindPostsByParamsRepository,
   UpdatePostRepository,
 } from '@server/data/protocols/db';
 import { Post, Topic, User } from '@server/domain/entities';
+import { FindPostsByParams } from '@server/domain/use-cases';
 import { ServerError } from '@server/presentation/errors';
 import { PrismaPostRepository } from './prisma-post-repository';
 
 type PostRepository = CreatePostRepository &
   FindPostByIdRepository &
+  FindPostsByParamsRepository &
   UpdatePostRepository &
   DeletePostRepository;
 
@@ -20,6 +23,7 @@ const prismaClientMock = (): PrismaClient =>
     post: {
       create: jest.fn(),
       findUnique: jest.fn(),
+      findMany: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
     },
@@ -171,6 +175,178 @@ describe('PrismaPostRepository', () => {
 
       await expect(result).rejects.toThrowError(
         new ServerError('Post not found')
+      );
+    });
+  });
+
+  describe('findManyByParams', () => {
+    it('should find many posts by params', async () => {
+      const params: FindPostsByParams.Params = {
+        keywords: faker.lorem.words(),
+        topics: [faker.string.uuid()],
+        skip: 10,
+        take: 10,
+      };
+      const post = {
+        id: faker.string.uuid(),
+        title: faker.lorem.words(),
+        content: faker.lorem.words(),
+        published: true,
+        author: {
+          id: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+        },
+        topics: [
+          {
+            id: faker.string.uuid(),
+            label: faker.lorem.word(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      jest.spyOn(prisma.post, 'findMany').mockResolvedValue([
+        {
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          published: post.published,
+          authorId: post.author.id,
+          author: {
+            id: post.author.id,
+            email: post.author.email,
+            name: post.author.name,
+          },
+          topics: post.topics,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+        },
+      ] as any[]);
+
+      const result = await prismaPostRepository.findManyByParams(params);
+
+      expect(prisma.post.findMany).toHaveBeenCalledWith({
+        where: {
+          published: true,
+          topics: { some: { id: { in: params.topics } } },
+          OR: [
+            { title: { contains: params.keywords, mode: 'insensitive' } },
+            { content: { contains: params.keywords, mode: 'insensitive' } },
+          ],
+        },
+        include: { author: true, topics: true },
+        skip: parseInt(params.skip.toString()),
+        take: parseInt(params.take.toString()),
+        orderBy: { createdAt: 'desc' },
+      });
+      expect(result).toStrictEqual(
+        result.map(
+          (post) =>
+            new Post({
+              id: post.id,
+              author: new User({
+                id: post.author.id,
+                email: post.author.email,
+                password: '',
+                name: post.author.name,
+              }),
+              topics: post.topics.map(
+                (topic) => new Topic({ ...(topic as any) })
+              ),
+              content: post.content,
+              published: post.published,
+              title: post.title,
+              createdAt: post.createdAt,
+              updatedAt: post.updatedAt,
+            })
+        )
+      );
+    });
+
+    it('should call findMany with default skip and take params', async () => {
+      const params: FindPostsByParams.Params = {
+        keywords: faker.lorem.words(),
+        topics: [faker.string.uuid()],
+      };
+      const post = {
+        id: faker.string.uuid(),
+        title: faker.lorem.words(),
+        content: faker.lorem.words(),
+        published: true,
+        author: {
+          id: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+        },
+        topics: [
+          {
+            id: faker.string.uuid(),
+            label: faker.lorem.word(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      jest.spyOn(prisma.post, 'findMany').mockResolvedValue([
+        {
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          published: post.published,
+          authorId: post.author.id,
+          author: {
+            id: post.author.id,
+            email: post.author.email,
+            name: post.author.name,
+          },
+          topics: post.topics,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+        },
+      ] as any[]);
+
+      const result = await prismaPostRepository.findManyByParams(params);
+
+      expect(prisma.post.findMany).toHaveBeenCalledWith({
+        where: {
+          published: true,
+          topics: { some: { id: { in: params.topics } } },
+          OR: [
+            { title: { contains: params.keywords, mode: 'insensitive' } },
+            { content: { contains: params.keywords, mode: 'insensitive' } },
+          ],
+        },
+        include: { author: true, topics: true },
+        skip: 0,
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+      });
+      expect(result).toStrictEqual(
+        result.map(
+          (post) =>
+            new Post({
+              id: post.id,
+              author: new User({
+                id: post.author.id,
+                email: post.author.email,
+                password: '',
+                name: post.author.name,
+              }),
+              topics: post.topics.map(
+                (topic) => new Topic({ ...(topic as any) })
+              ),
+              content: post.content,
+              published: post.published,
+              title: post.title,
+              createdAt: post.createdAt,
+              updatedAt: post.updatedAt,
+            })
+        )
       );
     });
   });
