@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@web/app/core/services';
-import { UserApiService } from '@web/modules/user/services';
 
 @Component({
   selector: 'nexus-register',
@@ -21,7 +20,6 @@ export class RegisterComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly userApiService: UserApiService,
     private readonly router: Router
   ) {}
 
@@ -40,7 +38,7 @@ export class RegisterComponent {
       name: this.register.value.name,
     };
     this.loading = true;
-    this.userApiService.register(params).subscribe((response) => {
+    this.authService.register(params).subscribe((response) => {
       if (!response.id) {
         this.loading = false;
         return;
@@ -52,19 +50,25 @@ export class RegisterComponent {
   private authenticateUser(): void {
     if (!this.register.value.email) return;
     if (!this.register.value.password) return;
-    this.userApiService
+    this.authService
       .login({
         email: this.register.value.email,
         password: this.register.value.password,
       })
-      .subscribe((response) => {
-        if (!response.user.id) {
+      .subscribe({
+        next: (response) => {
+          if (!response.user.id) {
+            this.loading = false;
+            return;
+          }
+          this.authService.setSession(response);
+          if (!this.authService.isLoggedIn) return;
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
           this.loading = false;
-          return;
-        }
-        this.authService.setSession(response);
-        if (!this.authService.isLoggedIn) return;
-        this.router.navigate(['/']);
+          throw new Error(error);
+        },
       });
   }
 }

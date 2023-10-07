@@ -16,10 +16,11 @@ export class CreateLikeController implements Controller {
     try {
       const { body } = request;
       if (!body) return badRequest(new MissingParamError('body'));
-      body.user.id = request.user.id;
+      body.user = { id: request.user.id };
       const like = await this.createLike.create(body);
       return created(like);
     } catch (error) {
+      console.log(error);
       return serverError(error);
     }
   }

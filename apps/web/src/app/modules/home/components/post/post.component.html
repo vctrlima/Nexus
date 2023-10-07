@@ -1,0 +1,45 @@
+<a class="nexus-post" [routerLink]="['/']">
+  <header class="nexus-post__header">
+    <div class="nexus-post__author">
+      <span class="nexus-post__author-picture">
+        {{ data.author?.name | slice : 0 : 1 }}
+      </span>
+    </div>
+    <div class="nexus-post__author-info">
+      <span class="nexus-post__author-name">{{ data.author?.name }}</span>
+      <small class="nexus-post__date">
+        at {{ data.createdAt | date : 'dd/MM/yyyy HH:mm' }}
+      </small>
+    </div>
+  </header>
+  <section class="nexus-post__section">
+    <h2 class="nexus-post__title">{{ data.title }}</h2>
+    <p class="nexus-post__content-preview" [innerHTML]="data.content"></p>
+  </section>
+  <footer class="nexus-post__footer">
+    <ul class="nexus-post__topics">
+      <li *ngFor="let topic of data.topics | slice : 0 : 2">
+        <nexus-topic [data]="topic"></nexus-topic>
+      </li>
+    </ul>
+    <!-- TODO: share button -->
+    <div *ngIf="logged">
+      <button type="button" class="nexus-post__btn" (click)="onToggleLike()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          viewBox="0 0 24 24"
+          [attr.fill]="like?.id ? '#f8727260' : 'none'"
+          [attr.stroke]="like?.id ? '#f87272' : 'currentColor'"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+          />
+        </svg>
+      </button>
+    </div>
+  </footer>
+</a>

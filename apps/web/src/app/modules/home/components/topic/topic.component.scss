@@ -1,0 +1,21 @@
+.nexus-topic {
+  @apply px-2
+    py-0.5
+    text-base
+    text-center
+    text-primary
+    border
+    border-solid
+    border-primary
+    bg-primary
+    bg-opacity-10
+    rounded-full
+    transition-all
+    duration-200
+    ease-in-out;
+
+  &:hover {
+    @apply text-white
+      bg-opacity-100;
+  }
+}

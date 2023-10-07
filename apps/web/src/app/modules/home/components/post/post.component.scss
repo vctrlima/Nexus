@@ -1,0 +1,93 @@
+.nexus-post {
+  @apply bg-base-100
+    flex
+    flex-col
+    shadow
+    rounded-lg
+    border
+    border-solid
+    border-gray-200
+    transition-all
+    duration-200
+    ease-in-out
+    h-60;
+
+  &:hover {
+    @apply bg-base-300
+      opacity-80;
+  }
+
+  &__header {
+    @apply flex justify-start items-center p-3 gap-3;
+  }
+
+  &__author {
+    @apply flex justify-start items-center gap-2;
+  }
+
+  &__author-picture {
+    @apply flex
+      justify-center
+      items-center
+      w-10
+      h-10
+      rounded-full
+      text-lg
+      bg-primary
+      text-white
+      font-bold;
+  }
+
+  &__author-info {
+    @apply flex
+      flex-col;
+  }
+
+  &__author-name {
+    @apply font-bold;
+  }
+
+  &__section {
+    @apply px-3
+      flex-1;
+  }
+
+  &__title {
+    @apply text-xl font-bold mb-0;
+  }
+
+  &__content-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__footer {
+    @apply mt-3
+      p-3
+      bg-base-100
+      border-t
+      border-solid
+      border-gray-200
+      flex
+      justify-between
+      items-center
+      rounded-b-lg;
+  }
+
+  &__topics {
+    @apply flex
+      justify-start
+      items-center
+      gap-2;
+  }
+
+  &__btn {
+    @apply btn
+      h-8
+      min-h-8
+      px-1.5;
+  }
+}

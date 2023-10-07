@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@web/app/core/services';
-import { UserApiService } from '@web/modules/user/services';
 
 @Component({
   selector: 'nexus-login',
@@ -19,7 +18,6 @@ export class LoginComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly userApiService: UserApiService,
     private readonly router: Router
   ) {}
 
@@ -31,14 +29,24 @@ export class LoginComponent {
       password: this.login.value.password,
     };
     this.loading = true;
-    this.userApiService.login(params).subscribe((response) => {
-      if (!response.user.id) {
-        this.loading = false;
-        return;
-      }
-      this.authService.setSession(response);
-      if (!this.authService.isLoggedIn) return;
-      this.router.navigate(['/']);
-    });
+    try {
+      this.authService.login(params).subscribe({
+        next: (response) => {
+          if (!response.user.id) {
+            this.loading = false;
+            return;
+          }
+          this.authService.setSession(response);
+          if (!this.authService.isLoggedIn) return;
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          this.loading = false;
+          throw new Error(error);
+        },
+      });
+    } catch (error) {
+      this.loading = false;
+    }
   }
 }
