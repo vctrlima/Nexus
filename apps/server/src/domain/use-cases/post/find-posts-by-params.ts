@@ -12,6 +12,7 @@ export namespace FindPostsByParams {
     topics?: string[];
     skip?: number;
     take?: number;
+    user?: { id: string };
   }
 
   export type Model = Post[];

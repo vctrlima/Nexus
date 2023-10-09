@@ -20,6 +20,9 @@ export class FindPostsByParamsController implements Controller {
       if (request.query.topics) {
         params = { ...params, topics: request.query.topics.split(',') };
       }
+      if (request.user?.id) {
+        params = { ...params, user: request.user };
+      }
       const post = await this.findPostsByParams.findManyByParams(params);
       return ok(post);
     } catch (error) {

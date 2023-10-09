@@ -1,4 +1,131 @@
-<p>
-  <strong>TODO:</strong> Here should be displayed the list of trending posts
-  (with the most likes, comments, etc.).
-</p>
+<section class="nexus-home">
+  <div class="nexus-home__content">
+    <div class="nexus-home__header">
+      <header class="nexus-home__header">
+        <h2 class="nexus-home__title">
+          Recent posts
+          <ng-container *ngIf="selectedTopics">
+            about
+            <span class="nexus-home__title--highlight">
+              {{ selectedTopics }}
+            </span>
+          </ng-container>
+        </h2>
+        <span class="nexus-home__description">See new user activity</span>
+      </header>
+      <ul class="nexus-home__topics nexus-home__topics--mobile">
+        <ng-container *ngTemplateOutlet="topicItems"></ng-container>
+      </ul>
+    </div>
+    <ul class="nexus-home__posts">
+      <li *ngFor="let post of posts">
+        <nexus-post
+          [data]="post"
+          [like]="post.like"
+          (toggleLike)="togglePostLike(post)"
+          [logged]="isLoggedIn"
+        ></nexus-post>
+      </li>
+    </ul>
+  </div>
+  <aside class="nexus-home__aside">
+    <div class="nexus-home__aside--fixed">
+      <h3 class="nexus-home__aside-title">
+        Welcome to
+        <strong class="nexus-home__aside-title--highlight">Nexus</strong>
+      </h3>
+      <p class="nexus-home__aside-description">
+        Explore a world of insightful articles, captivating stories, and
+        thought-provoking essays on Nexus. Connect with a community of
+        passionate writers and curious minds, sharing diverse perspectives and
+        knowledge in a creative space that inspires learning and meaningful
+        discussions.
+      </p>
+      <ul class="nexus-home__topics nexus-home__topics--desktop">
+        <ng-container *ngTemplateOutlet="topicItems"></ng-container>
+      </ul>
+      <div class="nexus-home__contributors">
+        <h5 class="nexus-home__contributors-title">Meet the contributors</h5>
+        <ul class="nexus-home__contributors-list">
+          <li>
+            <a
+              href="https://github.com/felipemenesesme"
+              target="_blank"
+              class="nexus-home__contributor-link"
+              title="Felipe Meneses"
+            >
+              <div class="w-12 rounded-full">
+                <img
+                  src="https://avatars.githubusercontent.com/u/36025495?v=4"
+                />
+              </div>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/vctrlima"
+              target="_blank"
+              class="nexus-home__contributor-link"
+              title="Victor Lima"
+            >
+              <div class="w-12 rounded-full">
+                <img
+                  src="https://avatars.githubusercontent.com/u/69322481?v=4"
+                />
+              </div>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/vitorcbs"
+              target="_blank"
+              class="nexus-home__contributor-link"
+              title="Vitor Contine"
+            >
+              <div class="w-12 rounded-full">
+                <img
+                  src="https://avatars.githubusercontent.com/u/87830090?v=4"
+                />
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+</section>
+<button class="nexus-home__create-post" *ngIf="isLoggedIn">
+  Create post
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 512 512"
+    class="h-6 w-6"
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="32"
+      d="M256 112v288"
+    ></path>
+    <path
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="32"
+      d="M400 256H112"
+    ></path>
+  </svg>
+</button>
+
+<ng-template #topicItems>
+  <li *ngFor="let topic of topics">
+    <nexus-topic
+      [data]="topic"
+      (toggle)="handleTopicSelection(topic, $event)"
+    ></nexus-topic>
+  </li>
+</ng-template>

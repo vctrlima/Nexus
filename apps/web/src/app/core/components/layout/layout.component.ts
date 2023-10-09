@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./layout.component.scss'],
   template: `
     <nexus-header></nexus-header>
-    <main class="content">
+    <main class="nexus-layout">
       <router-outlet></router-outlet>
     </main>
   `,

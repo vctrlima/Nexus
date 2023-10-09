@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LogoModule } from '@web/app/core/components/logo/logo.module';
-import { UserApiService } from './services';
 import { UserRoutingModule } from './user-routing.module';
 import { LoginComponent } from './views';
 import { RegisterComponent } from './views/register/register.component';
@@ -19,6 +18,6 @@ import { RegisterComponent } from './views/register/register.component';
     LogoModule,
     UserRoutingModule,
   ],
-  providers: [UserApiService],
+  providers: [],
 })
 export class UserModule {}
