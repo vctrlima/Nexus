@@ -11,15 +11,11 @@
     @apply flex
       justify-start
       items-center
-      gap-3
+      gap-2
       mx-auto;
 
-    &--mobile {
-      @apply hidden;
-    }
-
     &--desktop {
-      @apply mt-3 mb-1;
+      @apply hidden mt-3 mb-1;
     }
   }
 
@@ -30,6 +26,10 @@
   &__title {
     @apply font-bold
       text-2xl;
+
+    &--highlight {
+      @apply text-primary;
+    }
   }
 
   &__description {
@@ -55,11 +55,24 @@
   }
 
   @media (min-width: 768px) {
+    min-height: calc(100vh - 6.5rem);
     @apply grid
       grid-cols-3
       max-w-5xl
       mx-auto
       gap-3;
+
+    &__topics {
+      @apply flex
+        justify-start
+        items-center
+        gap-2
+        mx-auto;
+
+      &--mobile {
+        @apply hidden;
+      }
+    }
 
     &__content {
       @apply col-span-2

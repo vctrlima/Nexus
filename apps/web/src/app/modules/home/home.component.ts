@@ -3,10 +3,11 @@ import {
   AuthService,
   Post,
   PostService,
+  SearchService,
   Topic,
   TopicService,
 } from '@web/app/core/services';
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'nexus-home',
@@ -15,7 +16,16 @@ import { Observable, throwError } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
   public posts: Post[] = [];
-  public topics$!: Observable<Topic[]>;
+  public searchParams: SearchPostsParams = { skip: 0, take: 20 };
+  public topics: Topic[] = [];
+  private loaded = false;
+
+  public get selectedTopics() {
+    return this.topics
+      .filter((x) => x.selected)
+      .map((x) => `#${x.label}`)
+      .join(', ');
+  }
 
   public get isLoggedIn() {
     return this.authService.isLoggedIn;
@@ -24,20 +34,37 @@ export class HomeComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly postService: PostService,
+    private readonly searchService: SearchService,
     private readonly topicService: TopicService
   ) {}
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
+    this.subscribeSearch();
     this.getTopics();
     this.getPosts();
   }
 
-  private getTopics(): void {
-    this.topics$ = this.topicService.getTopics();
+  private subscribeSearch(): void {
+    this.searchService.searchQuery.subscribe((keywords) => {
+      this.searchParams = { ...this.searchParams, keywords };
+      if (this.loaded) this.getPosts();
+      else this.loaded = true;
+    });
   }
 
-  private getPosts(skip = 0): void {
-    this.postService.getPosts({ skip, take: 20 }).subscribe({
+  private getTopics(): void {
+    this.topicService.getTopics().subscribe({
+      next: (topics) => {
+        this.topics = topics;
+      },
+      error: (error) => {
+        return throwError(() => new Error(error));
+      },
+    });
+  }
+
+  private getPosts(): void {
+    this.postService.getPosts(this.searchParams).subscribe({
       next: (response) => {
         this.posts = [...this.posts, ...response];
       },
@@ -45,6 +72,28 @@ export class HomeComponent implements OnInit {
         return throwError(() => new Error(error));
       },
     });
+  }
+
+  private clearPosts(): void {
+    this.posts = [];
+  }
+
+  private setTopicSearchParams(): void {
+    this.searchParams.topics = this.topics
+      .filter((x) => x.selected)
+      .map((x) => x.id)
+      .join(',');
+  }
+
+  private toggleTopic(topic: Topic, selected: boolean): void {
+    topic.selected = selected;
+  }
+
+  public handleTopicSelection(topic: Topic, selected: boolean): void {
+    this.toggleTopic(topic, selected);
+    this.setTopicSearchParams();
+    this.clearPosts();
+    this.getPosts();
   }
 
   public togglePostLike(post: Post): void {
@@ -77,4 +126,11 @@ export class HomeComponent implements OnInit {
       },
     });
   }
+}
+
+interface SearchPostsParams {
+  keywords?: string;
+  topics?: string;
+  skip: number;
+  take: number;
 }

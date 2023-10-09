@@ -1,3 +1,12 @@
-<a [routerLink]="['/']" class="nexus-topic">
+<button
+  type="button"
+  class="nexus-topic"
+  (click)="onToggle()"
+  [disabled]="disabled"
+  [ngClass]="{
+    'nexus-topic__active': data.selected,
+    'cursor-default': disabled
+  }"
+>
   <span>{{ data.label | lowercase }}</span>
-</a>
+</button>

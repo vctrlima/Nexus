@@ -14,8 +14,12 @@
     duration-200
     ease-in-out;
 
-  &:hover {
+  &__active {
     @apply text-white
       bg-opacity-100;
+  }
+
+  &:hover {
+    @apply opacity-60;
   }
 }

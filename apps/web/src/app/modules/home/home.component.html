@@ -2,13 +2,19 @@
   <div class="nexus-home__content">
     <div class="nexus-home__header">
       <header class="nexus-home__header">
-        <h2 class="nexus-home__title">Recent Posts</h2>
+        <h2 class="nexus-home__title">
+          Recent posts
+          <ng-container *ngIf="selectedTopics">
+            about
+            <span class="nexus-home__title--highlight">
+              {{ selectedTopics }}
+            </span>
+          </ng-container>
+        </h2>
         <span class="nexus-home__description">See new user activity</span>
       </header>
       <ul class="nexus-home__topics nexus-home__topics--mobile">
-        <li *ngFor="let topic of topics$ | async | slice : 0 : 4">
-          <nexus-topic [data]="topic"></nexus-topic>
-        </li>
+        <ng-container *ngTemplateOutlet="topicItems"></ng-container>
       </ul>
     </div>
     <ul class="nexus-home__posts">
@@ -36,9 +42,7 @@
         discussions.
       </p>
       <ul class="nexus-home__topics nexus-home__topics--desktop">
-        <li *ngFor="let topic of topics$ | async">
-          <nexus-topic [data]="topic"></nexus-topic>
-        </li>
+        <ng-container *ngTemplateOutlet="topicItems"></ng-container>
       </ul>
       <div class="nexus-home__contributors">
         <h5 class="nexus-home__contributors-title">Meet the contributors</h5>
@@ -116,3 +120,12 @@
     ></path>
   </svg>
 </button>
+
+<ng-template #topicItems>
+  <li *ngFor="let topic of topics">
+    <nexus-topic
+      [data]="topic"
+      (toggle)="handleTopicSelection(topic, $event)"
+    ></nexus-topic>
+  </li>
+</ng-template>

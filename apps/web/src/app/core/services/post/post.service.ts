@@ -3,22 +3,23 @@ import { Injectable } from '@angular/core';
 import { Topic, User } from '@web/app/core/services';
 import { environment } from '@web/environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PostService {
   private readonly apiUrl = environment.apiUrl;
 
   constructor(private readonly httpClient: HttpClient) {}
 
   public getPosts(
-    params: {
+    search: {
       keywords?: string;
       topics?: string;
       skip: number;
       take: number;
     } = { skip: 0, take: 10 }
   ) {
+    let params: any = { skip: search.skip, take: search.take };
+    if (search.keywords) params = { ...params, keywords: search.keywords };
+    if (search.topics) params = { ...params, topics: search.topics };
     return this.httpClient.get<Post[]>(`${this.apiUrl}/post`, { params });
   }
 

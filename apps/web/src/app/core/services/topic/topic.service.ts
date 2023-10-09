@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { Post } from '@web/app/core/services';
 import { environment } from '@web/environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class TopicService {
   private readonly apiUrl = environment.apiUrl;
 
@@ -17,9 +15,10 @@ export class TopicService {
 }
 
 export interface Topic {
-  id?: string;
+  id: string;
   label: string;
   posts?: Post[];
+  selected?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

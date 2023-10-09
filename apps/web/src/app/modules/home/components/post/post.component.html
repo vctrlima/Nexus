@@ -19,7 +19,7 @@
   <footer class="nexus-post__footer">
     <ul class="nexus-post__topics">
       <li *ngFor="let topic of data.topics | slice : 0 : 2">
-        <nexus-topic [data]="topic"></nexus-topic>
+        <nexus-topic [data]="topic" [disabled]="true"></nexus-topic>
       </li>
     </ul>
     <!-- TODO: share button -->
