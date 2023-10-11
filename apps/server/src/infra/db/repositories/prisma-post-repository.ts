@@ -66,12 +66,10 @@ export class PrismaPostRepository
       where = { ...where, topics: { some: { id: { in: params.topics } } } };
     }
     if (params.keywords) {
+      const search = { search: params.keywords.split(' ').join(' | ') };
       where = {
         ...where,
-        OR: [
-          { title: { contains: params.keywords, mode: 'insensitive' } },
-          { content: { contains: params.keywords, mode: 'insensitive' } },
-        ],
+        OR: [{ title: search }, { content: search }],
       };
     }
     const posts = await this.prisma.post.findMany({

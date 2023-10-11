@@ -18,12 +18,15 @@
       </ul>
     </div>
     <ul class="nexus-home__posts">
-      <li *ngFor="let post of posts">
+      <li *ngFor="let post of posts; last as isLast">
         <nexus-post
           [data]="post"
           [like]="post.like"
           (toggleLike)="togglePostLike(post)"
           [logged]="isLoggedIn"
+          nexusVisible
+          [isTargetElement]="posts.length >= 15 && isLast"
+          (elementVisible)="getMorePosts($event)"
         ></nexus-post>
       </li>
     </ul>

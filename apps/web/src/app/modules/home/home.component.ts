@@ -16,7 +16,7 @@ import { throwError } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
   public posts: Post[] = [];
-  public searchParams: SearchPostsParams = { skip: 0, take: 20 };
+  public searchParams: SearchPostsParams = { skip: 0, take: 15 };
   public topics: Topic[] = [];
   private loaded = false;
 
@@ -39,16 +39,28 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.scrollToTop();
     this.subscribeSearch();
     this.getTopics();
     this.getPosts();
   }
 
+  private scrollToTop() {
+    window.scroll(0, 0);
+  }
+
   private subscribeSearch(): void {
     this.searchService.searchQuery.subscribe((keywords) => {
-      this.searchParams = { ...this.searchParams, keywords };
-      if (this.loaded) this.getPosts();
-      else this.loaded = true;
+      if (this.loaded) {
+        this.searchParams = {
+          ...this.searchParams,
+          skip: 0,
+          take: 15,
+          keywords,
+        };
+        this.clearPosts();
+        this.getPosts();
+      } else this.loaded = true;
     });
   }
 
@@ -66,7 +78,7 @@ export class HomeComponent implements OnInit {
   private getPosts(): void {
     this.postService.getPosts(this.searchParams).subscribe({
       next: (response) => {
-        this.posts = [...this.posts, ...response];
+        this.posts = this.posts.concat(response);
       },
       error: (error) => {
         return throwError(() => new Error(error));
@@ -125,6 +137,19 @@ export class HomeComponent implements OnInit {
         return throwError(() => new Error(error));
       },
     });
+  }
+
+  public getMorePosts(visible = false) {
+    if (!visible) return;
+    const currentPostsLength = this.posts.length;
+    if (currentPostsLength <= 0) return;
+    const searchTakePagination = this.searchParams.take;
+    if (currentPostsLength % searchTakePagination !== 0) return;
+    this.searchParams = {
+      ...this.searchParams,
+      skip: this.searchParams.skip + searchTakePagination,
+    };
+    this.getPosts();
   }
 }
 

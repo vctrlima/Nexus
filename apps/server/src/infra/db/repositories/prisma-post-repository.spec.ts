@@ -233,8 +233,8 @@ describe('PrismaPostRepository', () => {
           published: true,
           topics: { some: { id: { in: params.topics } } },
           OR: [
-            { title: { contains: params.keywords, mode: 'insensitive' } },
-            { content: { contains: params.keywords, mode: 'insensitive' } },
+            { title: { search: params.keywords.split(' ').join(' | ') } },
+            { content: { search: params.keywords.split(' ').join(' | ') } },
           ],
         },
         include: { author: true, topics: true, likes: false },
@@ -317,8 +317,8 @@ describe('PrismaPostRepository', () => {
           published: true,
           topics: { some: { id: { in: params.topics } } },
           OR: [
-            { title: { contains: params.keywords, mode: 'insensitive' } },
-            { content: { contains: params.keywords, mode: 'insensitive' } },
+            { title: { search: params.keywords.split(' ').join(' | ') } },
+            { content: { search: params.keywords.split(' ').join(' | ') } },
           ],
         },
         include: { author: true, topics: true, likes: false },
