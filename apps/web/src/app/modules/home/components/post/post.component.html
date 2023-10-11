@@ -1,21 +1,23 @@
-<a class="nexus-post" [routerLink]="['/']">
-  <header class="nexus-post__header">
-    <div class="nexus-post__author">
-      <span class="nexus-post__author-picture">
-        {{ data.author?.name | slice : 0 : 1 }}
-      </span>
-    </div>
-    <div class="nexus-post__author-info">
-      <span class="nexus-post__author-name">{{ data.author?.name }}</span>
-      <small class="nexus-post__date">
-        at {{ data.createdAt | date : 'dd/MM/yyyy HH:mm' }}
-      </small>
-    </div>
-  </header>
-  <section class="nexus-post__section">
-    <h2 class="nexus-post__title">{{ data.title }}</h2>
-    <p class="nexus-post__content-preview" [innerHTML]="data.content"></p>
-  </section>
+<div class="nexus-post">
+  <a class="nexus-post__link" [routerLink]="['/post/' + data.id]">
+    <header class="nexus-post__header">
+      <div class="nexus-post__author">
+        <span class="nexus-post__author-picture">
+          {{ data.author?.name | slice : 0 : 1 }}
+        </span>
+      </div>
+      <div class="nexus-post__author-info">
+        <span class="nexus-post__author-name">{{ data.author?.name }}</span>
+        <small class="nexus-post__date">
+          at {{ data.createdAt | date : 'dd/MM/yyyy HH:mm' }}
+        </small>
+      </div>
+    </header>
+    <section class="nexus-post__section">
+      <h2 class="nexus-post__title">{{ data.title }}</h2>
+      <p class="nexus-post__content-preview" [innerHTML]="data.content"></p>
+    </section>
+  </a>
   <footer class="nexus-post__footer">
     <ul class="nexus-post__topics">
       <li *ngFor="let topic of data.topics | slice : 0 : 2">
@@ -42,4 +44,4 @@
       </button>
     </div>
   </footer>
-</a>
+</div>

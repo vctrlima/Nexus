@@ -21,7 +21,7 @@ export class DeletePostController implements Controller {
   ): Promise<HttpResponse<void>> {
     try {
       const { id } = request.params;
-      const post = await this.findPostById.findById(id);
+      const post = await this.findPostById.findById({ id });
       if (post.author.id !== request.user.id) return unauthorized();
       await this.deletePost.delete(id);
       return noContent();

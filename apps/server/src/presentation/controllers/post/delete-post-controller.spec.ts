@@ -77,7 +77,7 @@ describe('DeletePostController', () => {
 
     const response = await deletePostController.handle(request);
 
-    expect(findPostById.findById).toHaveBeenCalledWith(postId);
+    expect(findPostById.findById).toHaveBeenCalledWith({ id: postId });
     expect(response).toEqual(unauthorized());
   });
 

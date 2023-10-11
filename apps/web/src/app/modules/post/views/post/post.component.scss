@@ -1,0 +1,71 @@
+.nexus-post {
+  &__content {
+    @apply w-full
+      max-w-2xl
+      mx-auto
+      text-lg;
+  }
+
+  &__content-title {
+    @apply text-4xl
+      font-bold
+      mb-3;
+  }
+
+  &__topics {
+    @apply flex
+      justify-start
+      items-center
+      gap-2
+      mb-5;
+  }
+
+  &__header {
+    @apply pb-5
+      mb-5
+      border-b
+      border-solid
+      border-gray-200
+      flex
+      justify-between;
+  }
+
+  &__author {
+    @apply flex
+      justify-start
+      items-center
+      gap-2;
+  }
+
+  &__author-picture {
+    @apply flex
+      justify-center
+      items-center
+      w-10
+      h-10
+      rounded-full
+      text-lg
+      bg-primary
+      text-white
+      font-bold;
+  }
+
+  &__author-info {
+    @apply not-italic
+      flex
+      flex-col
+      text-sm;
+  }
+
+  &__author-name {
+    @apply font-bold;
+  }
+
+  &__like {
+    @apply btn
+      h-10
+      w-10
+      min-h-8
+      px-1.5;
+  }
+}

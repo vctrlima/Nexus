@@ -7,7 +7,7 @@ import {
   UpdatePostRepository,
 } from '@server/data/protocols/db';
 import { Like, Post, Topic, User } from '@server/domain/entities';
-import { FindPostsByParams } from '@server/domain/use-cases';
+import { FindPostById, FindPostsByParams } from '@server/domain/use-cases';
 import { ServerError } from '@server/presentation/errors';
 
 export class PrismaPostRepository
@@ -33,13 +33,15 @@ export class PrismaPostRepository
     return { id };
   }
 
-  async findById(id: string): Promise<Post> {
+  async findById(params: FindPostById.Params): Promise<Post> {
     const post = await this.prisma.post.findUnique({
-      where: { id },
+      where: { id: params.id },
       include: {
         author: { select: { id: true, email: true, name: true } },
-        likes: { select: { id: true } },
         topics: true,
+        likes: params.user?.id
+          ? { where: { userId: params.user.id }, include: { user: true } }
+          : false,
       },
     });
     if (!post) throw new ServerError('Post not found');
@@ -52,6 +54,10 @@ export class PrismaPostRepository
         name: post.author.name,
       }),
       topics: post.topics.map((topic) => new Topic({ ...topic })),
+      like:
+        post.likes?.length > 0
+          ? post.likes.map((like) => new Like({ ...like })).pop()
+          : undefined,
       content: post.content,
       published: post.published,
       title: post.title,
