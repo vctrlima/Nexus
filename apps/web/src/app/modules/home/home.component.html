@@ -97,7 +97,7 @@
     </div>
   </aside>
 </section>
-<button class="nexus-home__create-post" *ngIf="isLoggedIn">
+<a class="nexus-home__create-post" *ngIf="isLoggedIn" [routerLink]="['/post']">
   Create post
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +122,7 @@
       d="M400 256H112"
     ></path>
   </svg>
-</button>
+</a>
 
 <ng-template #topicItems>
   <li *ngFor="let topic of topics">

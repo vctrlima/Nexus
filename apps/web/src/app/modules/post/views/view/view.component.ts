@@ -5,10 +5,10 @@ import { Observable, throwError } from 'rxjs';
 
 @Component({
   selector: 'nexus-post',
-  templateUrl: './post.component.html',
-  styleUrls: ['./post.component.scss'],
+  templateUrl: './view.component.html',
+  styleUrls: ['./view.component.scss'],
 })
-export class PostComponent implements OnInit {
+export class ViewComponent implements OnInit {
   public id!: string;
   public post$!: Observable<Post>;
 

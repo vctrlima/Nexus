@@ -1,0 +1,61 @@
+.nexus-create {
+  @apply w-full
+    max-w-2xl
+    mx-auto
+    text-lg
+    pb-10
+    min-h-[80vh];
+
+  &__header {
+    @apply mb-5;
+  }
+
+  &__message {
+    @apply text-primary
+      text-3xl
+      flex
+      flex-col
+      font-bold;
+  }
+
+  &__description {
+    @apply text-lg;
+  }
+
+  &__form {
+    @apply flex
+      flex-col
+      flex-1;
+  }
+
+  &__title {
+    @apply input
+      input-bordered
+      w-full
+      mb-5;
+  }
+
+  &__content {
+    @apply flex-1;
+  }
+
+  &__topics {
+    @apply flex
+      justify-start
+      items-center
+      gap-2
+      mb-5;
+  }
+
+  &__footer {
+    @apply flex
+      justify-end
+      items-center
+      mt-5;
+  }
+
+  &__submit {
+    @apply btn
+      btn-primary;
+  }
+}
