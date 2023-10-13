@@ -21,7 +21,9 @@ describe('FindPostsByParamsController', () => {
   });
 
   it('should find a post by id and return 200', async () => {
+    const userId = faker.string.uuid();
     const params: FindPostsByParams.Params = {
+      user: { id: userId },
       keywords: faker.lorem.words(),
       topics: [faker.lorem.word(), faker.lorem.word()],
       skip: 0,
@@ -43,6 +45,7 @@ describe('FindPostsByParamsController', () => {
     jest.spyOn(findPostsByParams, 'findManyByParams').mockResolvedValue(post);
     const request: HttpRequest = {
       query: { ...params, topics: params.topics.join(',') },
+      user: { id: userId },
     };
 
     const response = await findPostsByParamsController.handle(request);
