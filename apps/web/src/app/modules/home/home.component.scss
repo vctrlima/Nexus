@@ -23,6 +23,10 @@
     @apply mb-5;
   }
 
+  &__top-header {
+    @apply mb-3;
+  }
+
   &__title {
     @apply font-bold
       text-2xl;
@@ -35,6 +39,13 @@
   &__description {
     @apply text-base
       opacity-80;
+  }
+
+  &__search {
+    @apply flex
+      justify-start
+      items-center
+      overflow-visible;
   }
 
   &__posts {
