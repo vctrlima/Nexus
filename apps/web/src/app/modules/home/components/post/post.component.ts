@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Like, Post } from '@web/app/core/services/post/post.service';
+import { Like } from '@web/app/core/interfaces/like.interface';
+import { Post } from '@web/app/core/interfaces/post.interface';
 
 @Component({
   selector: 'nexus-post',

@@ -1,0 +1,31 @@
+.nexus-toolbar{
+  @apply w-full
+  mx-auto
+  text-lg
+  min-h-[1vh];
+
+
+  &_header{
+    @apply mb-5
+    p-1;
+  }
+
+  &_title{
+    @apply text-primary
+    flex
+    font-bold
+    text-center;
+  }
+
+  &_description {
+    @apply text-lg
+    text-justify;
+  }
+
+  &_subtitle{
+    @apply text-primary
+    text-center
+    font-bold
+    pt-5;
+  }
+}

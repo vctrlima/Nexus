@@ -1,0 +1,44 @@
+.nexus-create {
+  &_content {
+    @apply flex-1;
+  }
+  &_form {
+    @apply flex
+      flex-col
+      flex-1;
+  }
+
+  &_title {
+    @apply input
+      input-bordered
+      w-full
+      mb-5;
+  }
+
+  &_content {
+    @apply flex-1;
+  }
+
+  &_topics {
+    @apply flex
+      justify-start
+      items-center
+      gap-2
+      mb-5;
+  }
+
+  &_footer {
+    @apply flex
+      justify-end
+      items-center;
+  }
+
+  &_submit {
+    @apply btn
+      btn-primary
+      mt-5;
+    @media (max-width: 640px) {
+      @apply w-full;
+    }
+  }
+}

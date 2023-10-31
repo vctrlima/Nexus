@@ -1,0 +1,24 @@
+<div>
+  <form [formGroup]="post" (ngSubmit)="submit()" class="nexus-create_form">
+    <input type="text" placeholder="Insert title" formControlName="title" class="nexus-create_title"/>
+    <ul class="nexus-create_topics">
+      <li *ngFor="let topic of topics">
+        <nexus-topic
+          [data]="topic"
+          [disabled]="false"
+          (toggle)="topic.selected = !topic.selected"
+        ></nexus-topic>
+      </li>
+    </ul>
+    <div class="nexus-create_content">
+      <ckeditor
+        [editor]="editor"
+        [config]="config"
+        formControlName="content"
+      ></ckeditor>
+    </div>
+    <div class="nexus-create_footer">
+      <button type="submit" class="nexus-create_submit">Submit</button>
+    </div>
+  </form>
+</div>

@@ -1,6 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@web/environments/environment';
+import { LoginResponse } from '../../interfaces/loginResponse.interface';
+import { RefreshTokenResponse } from '../../interfaces/refreshToken.interface';
+import { RegisterResponse } from '../../interfaces/registerResponse.interface';
+import { User } from '../../interfaces/user.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -71,29 +75,4 @@ export class AuthService {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
-}
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-}
-
-export interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
-
-export interface RegisterResponse {
-  id: string;
-  email: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
