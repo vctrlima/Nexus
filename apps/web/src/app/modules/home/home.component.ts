@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Post } from '@web/app/core/interfaces/post.interface';
+import { Topic } from '@web/app/core/interfaces/topic.interface';
 import {
   AuthService,
-  Post,
   PostService,
   SearchService,
-  Topic,
   TopicService,
 } from '@web/app/core/services';
 import { throwError } from 'rxjs';

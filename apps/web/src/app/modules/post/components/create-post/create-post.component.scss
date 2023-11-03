@@ -1,0 +1,47 @@
+.nexus-create {
+  &_content {
+    @apply flex-1;
+  }
+  &_form {
+    @apply flex
+      flex-col
+      flex-1;
+  }
+
+  &_title {
+    @apply input
+      input-bordered
+      w-full
+      mb-5;
+  }
+
+  &_content {
+    @apply flex-1;
+  }
+
+  &_topics {
+    @apply flex
+      justify-start
+      items-center
+      gap-2
+      mb-5;
+  }
+
+  &_footer {
+    @apply flex
+      justify-end
+      items-center;
+  }
+
+  &_submit {
+    @apply btn
+      btn-primary
+      mt-5;
+    @media (max-width: 640px) {
+      @apply w-full;
+    }
+  }
+}
+
+.scale-out-center{animation:scale-out-center .5s cubic-bezier(.55,.085,.68,.53) both}
+@keyframes scale-out-center{0%{transform:scale(1);opacity:1}100%{transform:scale(0);opacity:1}}

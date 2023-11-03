@@ -1,0 +1,34 @@
+.nexus-toolbar{
+  @apply w-full
+  mx-auto
+  text-lg
+  min-h-[1vh];
+
+
+  &_header{
+    @apply mb-5
+    p-1;
+  }
+
+  &_title{
+    @apply text-primary
+    flex
+    font-bold
+    text-center;
+  }
+
+  &_description {
+    @apply text-lg
+    text-justify;
+  }
+
+  &_subtitle{
+    @apply text-primary
+    text-center
+    font-bold
+    pt-5;
+  }
+}
+
+@keyframes tracking-in-expand{0%{letter-spacing:-.5em;opacity:0}40%{opacity:.6}100%{opacity:1}}
+.tracking-in-expand{animation:tracking-in-expand .7s cubic-bezier(.215,.61,.355,1.000) both}
