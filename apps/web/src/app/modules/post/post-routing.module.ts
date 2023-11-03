@@ -1,18 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PostComponent } from './post.component';
+import { PostComponent } from './pages/create-post/post.component';
+import { ViewPostComponent } from './pages/view-post/view.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: PostComponent,
-    pathMatch: 'full'
-  },
-  {
-    path: ':id',
-    component: PostComponent,
-    pathMatch: 'full'
-  },
+  { path: '', component: PostComponent },
+  { path: ':id', component: ViewPostComponent },
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({

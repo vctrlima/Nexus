@@ -8,6 +8,8 @@ import { AuthService } from '@web/app/core/services/auth/auth.service';
 import { PostService } from '@web/app/core/services/post/post.service';
 import { TopicService } from '@web/app/core/services/topic/topic.service';
 import { throwError } from 'rxjs';
+import { Renderer2, ElementRef } from '@angular/core';
+
 
 @Component({
   selector: 'nexus-create-post',
@@ -18,6 +20,7 @@ export class CreatePostComponent implements OnInit {
 
   public readonly editor = ClassicEditor;
   public topics!: Topic[];
+  public addScaleOutClass = false;
   public readonly config = {
     toolbar: [
       'undo',
@@ -40,7 +43,7 @@ export class CreatePostComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly postService: PostService,
     private readonly topicService: TopicService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
   ngOnInit(): void {
     this.topicService.getTopics().subscribe({
@@ -71,7 +74,10 @@ export class CreatePostComponent implements OnInit {
     if (this.post.invalid) return;
     this.postService.createPost(this.post.value as any).subscribe({
       next: (response) => {
-        this.router.navigate([`/post/${response.id}`]);
+        this.addScaleOutClass = true;
+        setTimeout(() => {
+          this.router.navigate([`/post/${response.id}`]);
+        }, 1000)
       },
       error: (error) => {
         return throwError(() => new Error(error));

@@ -1,5 +1,5 @@
-<div>
-  <form [formGroup]="post" (ngSubmit)="submit()" class="nexus-create_form">
+<div [ngClass]="{'scale-out-center': addScaleOutClass}">
+  <form [formGroup]="post" class="nexus-create_form">
     <input type="text" placeholder="Insert title" formControlName="title" class="nexus-create_title"/>
     <ul class="nexus-create_topics">
       <li *ngFor="let topic of topics">
@@ -18,7 +18,7 @@
       ></ckeditor>
     </div>
     <div class="nexus-create_footer">
-      <button type="submit" class="nexus-create_submit">Submit</button>
+      <button type="submit" class="nexus-create_submit" (click)="submit()">Submit</button>
     </div>
   </form>
 </div>
