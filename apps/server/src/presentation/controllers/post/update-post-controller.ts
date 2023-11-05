@@ -26,7 +26,7 @@ export class UpdatePostController implements Controller {
       const { id } = request.params;
       if (!body) return badRequest(new MissingParamError('body'));
       body.id = id;
-      const foundPost = await this.findPostById.findById(id);
+      const foundPost = await this.findPostById.findById({ id });
       if (foundPost.author.id !== request.user.id) return unauthorized();
       const post = await this.updatePost.update(body);
       return ok(post);

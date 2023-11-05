@@ -38,7 +38,7 @@ describe('FindPostByIdController', () => {
 
     const response = await findPostByIdController.handle(request);
 
-    expect(findPostById.findById).toHaveBeenCalledWith(postId);
+    expect(findPostById.findById).toHaveBeenCalledWith({ id: postId });
     expect(response).toEqual(ok(foundPost));
   });
 
@@ -53,7 +53,7 @@ describe('FindPostByIdController', () => {
 
     const response = await findPostByIdController.handle(request);
 
-    expect(findPostById.findById).toHaveBeenCalledWith(postId);
+    expect(findPostById.findById).toHaveBeenCalledWith({ id: postId });
     expect(response).toEqual(serverError(new Error('Error finding post')));
   });
 });

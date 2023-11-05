@@ -1,12 +1,12 @@
-import { FindPostByIdRepository } from '@server/data/protocols/db'
-import { FindPostById } from '@server/domain/use-cases'
+import { FindPostByIdRepository } from '@server/data/protocols/db';
+import { FindPostById } from '@server/domain/use-cases';
 
 export class DbFindPostById implements FindPostById {
   constructor(
-    private readonly findPostByIdRepository: FindPostByIdRepository,
+    private readonly findPostByIdRepository: FindPostByIdRepository
   ) {}
 
-  async findById(id: FindPostById.Params): Promise<FindPostById.Model> {
-    return await this.findPostByIdRepository.findById(id)
+  async findById(params: FindPostById.Params): Promise<FindPostById.Model> {
+    return await this.findPostByIdRepository.findById(params);
   }
 }

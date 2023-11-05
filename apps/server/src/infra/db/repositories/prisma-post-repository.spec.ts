@@ -135,13 +135,13 @@ describe('PrismaPostRepository', () => {
         updatedAt: foundPost.updatedAt,
       } as any);
 
-      const result = await prismaPostRepository.findById(postId);
+      const result = await prismaPostRepository.findById({ id: postId });
 
       expect(prisma.post.findUnique).toHaveBeenCalledWith({
         where: { id: postId },
         include: {
           author: { select: { id: true, email: true, name: true } },
-          likes: { select: { id: true } },
+          likes: false,
           topics: true,
         },
       });
@@ -161,6 +161,7 @@ describe('PrismaPostRepository', () => {
             updatedAt: undefined,
           }),
           topics: foundPost.topics.map((topic) => new Topic({ ...topic })),
+          like: undefined,
           createdAt: foundPost.createdAt,
           updatedAt: foundPost.updatedAt,
         })
@@ -171,7 +172,7 @@ describe('PrismaPostRepository', () => {
       const postId = faker.string.uuid();
       jest.spyOn(prisma.post, 'findUnique').mockResolvedValue(undefined as any);
 
-      const result = prismaPostRepository.findById(postId);
+      const result = prismaPostRepository.findById({ id: postId });
 
       await expect(result).rejects.toThrowError(
         new ServerError('Post not found')
@@ -233,8 +234,8 @@ describe('PrismaPostRepository', () => {
           published: true,
           topics: { some: { id: { in: params.topics } } },
           OR: [
-            { title: { contains: params.keywords, mode: 'insensitive' } },
-            { content: { contains: params.keywords, mode: 'insensitive' } },
+            { title: { search: params.keywords.split(' ').join(' | ') } },
+            { content: { search: params.keywords.split(' ').join(' | ') } },
           ],
         },
         include: { author: true, topics: true, likes: false },
@@ -317,8 +318,8 @@ describe('PrismaPostRepository', () => {
           published: true,
           topics: { some: { id: { in: params.topics } } },
           OR: [
-            { title: { contains: params.keywords, mode: 'insensitive' } },
-            { content: { contains: params.keywords, mode: 'insensitive' } },
+            { title: { search: params.keywords.split(' ').join(' | ') } },
+            { content: { search: params.keywords.split(' ').join(' | ') } },
           ],
         },
         include: { author: true, topics: true, likes: false },

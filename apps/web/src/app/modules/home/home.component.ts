@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   AuthService,
   Post,
@@ -16,9 +17,8 @@ import { throwError } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
   public posts: Post[] = [];
-  public searchParams: SearchPostsParams = { skip: 0, take: 20 };
+  public searchParams!: SearchPostsParams;
   public topics: Topic[] = [];
-  private loaded = false;
 
   public get selectedTopics() {
     return this.topics
@@ -35,20 +35,52 @@ export class HomeComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly postService: PostService,
     private readonly searchService: SearchService,
-    private readonly topicService: TopicService
+    private readonly topicService: TopicService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+    this.scrollToTop();
     this.subscribeSearch();
+    this.subscribeQueryParams();
     this.getTopics();
-    this.getPosts();
+  }
+
+  private defineQueryParams(queryParams: SearchPostsParams) {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams,
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private subscribeQueryParams() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      const skip = params['skip'];
+      const take = params['take'];
+      let queryParams: any = { skip: skip ?? 0, take: take ?? 15 };
+      const keywords = params['keywords'];
+      if (keywords) queryParams = { ...queryParams, keywords };
+      const topics = params['topics'];
+      if (topics) queryParams = { ...queryParams, topics };
+      if (!this.searchParams != queryParams) {
+        this.searchParams = queryParams;
+        this.getPosts();
+      }
+    });
+  }
+
+  private scrollToTop() {
+    window.scroll(0, 0);
   }
 
   private subscribeSearch(): void {
     this.searchService.searchQuery.subscribe((keywords) => {
-      this.searchParams = { ...this.searchParams, keywords };
-      if (this.loaded) this.getPosts();
-      else this.loaded = true;
+      this.clearPosts();
+      if (keywords) {
+        this.defineQueryParams({ ...this.searchParams, skip: 0, keywords });
+      }
     });
   }
 
@@ -66,7 +98,7 @@ export class HomeComponent implements OnInit {
   private getPosts(): void {
     this.postService.getPosts(this.searchParams).subscribe({
       next: (response) => {
-        this.posts = [...this.posts, ...response];
+        this.posts = this.posts.concat(response);
       },
       error: (error) => {
         return throwError(() => new Error(error));
@@ -78,11 +110,14 @@ export class HomeComponent implements OnInit {
     this.posts = [];
   }
 
-  private setTopicSearchParams(): void {
-    this.searchParams.topics = this.topics
+  private getTopicSearchParams(): SearchPostsParams {
+    const skip = 0;
+    const { take, keywords } = this.searchParams;
+    const topics = this.topics
       .filter((x) => x.selected)
       .map((x) => x.id)
       .join(',');
+    return { skip, take, keywords, topics };
   }
 
   private toggleTopic(topic: Topic, selected: boolean): void {
@@ -91,9 +126,9 @@ export class HomeComponent implements OnInit {
 
   public handleTopicSelection(topic: Topic, selected: boolean): void {
     this.toggleTopic(topic, selected);
-    this.setTopicSearchParams();
     this.clearPosts();
-    this.getPosts();
+    const queryParams = this.getTopicSearchParams();
+    this.defineQueryParams(queryParams);
   }
 
   public togglePostLike(post: Post): void {
@@ -124,6 +159,18 @@ export class HomeComponent implements OnInit {
       error: (error) => {
         return throwError(() => new Error(error));
       },
+    });
+  }
+
+  public getMorePosts(visible = false) {
+    if (!visible) return;
+    const currentPostsLength = this.posts.length;
+    if (currentPostsLength <= 0) return;
+    const searchTakePagination = parseInt(this.searchParams.take.toString());
+    if (currentPostsLength % searchTakePagination !== 0) return;
+    this.defineQueryParams({
+      ...this.searchParams,
+      skip: parseInt(this.searchParams.skip.toString()) + searchTakePagination,
     });
   }
 }

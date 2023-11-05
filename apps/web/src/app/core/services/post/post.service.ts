@@ -9,6 +9,10 @@ export class PostService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
+  public getPostById(id: string) {
+    return this.httpClient.get<Post>(`${this.apiUrl}/post/${id}`);
+  }
+
   public getPosts(
     search: {
       keywords?: string;

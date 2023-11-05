@@ -17,7 +17,11 @@ export default (router: Router) => {
     optionalAuth,
     adaptRoute(makeFindPostsByParamsController())
   );
-  router.get('/post/:id', adaptRoute(makeFindPostByIdController()));
+  router.get(
+    '/post/:id',
+    optionalAuth,
+    adaptRoute(makeFindPostByIdController())
+  );
   router.put('/post/:id', auth, adaptRoute(makeUpdatePostController()));
   router.delete('/post/:id', auth, adaptRoute(makeDeletePostController()));
 };

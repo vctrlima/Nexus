@@ -5,6 +5,6 @@ export interface FindPostById {
 }
 
 export namespace FindPostById {
-  export type Params = string;
+  export type Params = { id: string; user?: { id: string } };
   export type Model = Post;
 }

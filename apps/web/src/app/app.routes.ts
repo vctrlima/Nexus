@@ -16,6 +16,15 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('./modules/user/user.module').then((m) => m.UserModule),
       },
+      {
+        path: 'post',
+        loadChildren: () =>
+          import('./modules/post/post.module').then((m) => m.PostModule),
+      },
+      {
+        path: '**',
+        redirectTo: '/',
+      },
     ],
   },
 ];

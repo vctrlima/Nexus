@@ -103,7 +103,7 @@ describe('UpdatePostController', () => {
 
     const response = await updatePostController.handle(request);
 
-    expect(findPostById.findById).toHaveBeenCalledWith(postId);
+    expect(findPostById.findById).toHaveBeenCalledWith({ id: postId });
     expect(response).toEqual(unauthorized());
   });
 

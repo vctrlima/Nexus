@@ -62,7 +62,7 @@ describe('CreatePostController', () => {
     const response = await createPostController.handle(request);
 
     expect(createPost.create).toHaveBeenCalledWith(createParams);
-    expect(findPostById.findById).toHaveBeenCalledWith(createdPost.id);
+    expect(findPostById.findById).toHaveBeenCalledWith({ id: createdPost.id });
     expect(response).toEqual(created(foundPost));
   });
 
