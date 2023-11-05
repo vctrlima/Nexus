@@ -7,7 +7,7 @@ import {
   FindPostsByParamsRepository,
   UpdatePostRepository,
 } from '@server/data/protocols/db';
-import { Post, Topic, User } from '@server/domain/entities';
+import { Like, Post, Topic, User } from '@server/domain/entities';
 import { FindPostsByParams } from '@server/domain/use-cases';
 import { ServerError } from '@server/presentation/errors';
 import { PrismaPostRepository } from './prisma-post-repository';
@@ -97,6 +97,94 @@ describe('PrismaPostRepository', () => {
 
   describe('findById', () => {
     it('should find a post by id', async () => {
+      const userId = faker.string.uuid();
+      const postId = faker.string.uuid();
+      const foundPost = {
+        id: postId,
+        title: faker.lorem.words(),
+        content: faker.lorem.words(),
+        published: true,
+        author: {
+          id: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+        },
+        topics: [
+          {
+            id: faker.string.uuid(),
+            label: faker.lorem.word(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        likes: [
+          {
+            id: faker.string.uuid(),
+            user: {
+              id: faker.string.uuid(),
+              email: faker.internet.email(),
+              name: faker.person.fullName(),
+              password: undefined,
+            },
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      jest.spyOn(prisma.post, 'findUnique').mockResolvedValue({
+        id: foundPost.id,
+        title: foundPost.title,
+        content: foundPost.content,
+        published: foundPost.published,
+        authorId: foundPost.author.id,
+        author: {
+          id: foundPost.author.id,
+          email: foundPost.author.email,
+          name: foundPost.author.name,
+        },
+        likes: foundPost.likes,
+        topics: foundPost.topics,
+        createdAt: foundPost.createdAt,
+        updatedAt: foundPost.updatedAt,
+      } as any);
+
+      const result = await prismaPostRepository.findById({
+        id: postId,
+        user: { id: userId },
+      });
+
+      expect(prisma.post.findUnique).toHaveBeenCalledWith({
+        where: { id: postId },
+        include: {
+          author: { select: { id: true, email: true, name: true } },
+          likes: { where: { userId }, include: { user: true } },
+          topics: true,
+        },
+      });
+      expect(result).toStrictEqual(
+        new Post({
+          id: foundPost.id,
+          title: foundPost.title,
+          content: foundPost.content,
+          published: foundPost.published,
+          author: new User({
+            id: foundPost.author.id,
+            email: foundPost.author.email,
+            name: foundPost.author.name,
+            password: '',
+            posts: undefined,
+            createdAt: undefined,
+            updatedAt: undefined,
+          }),
+          topics: foundPost.topics.map((topic) => new Topic({ ...topic })),
+          like: foundPost.likes.map((like) => new Like({ ...like })).pop(),
+          createdAt: foundPost.createdAt,
+          updatedAt: foundPost.updatedAt,
+        })
+      );
+    });
+
+    it('should find a post by id without likes', async () => {
       const postId = faker.string.uuid();
       const foundPost = {
         id: postId,
@@ -135,7 +223,9 @@ describe('PrismaPostRepository', () => {
         updatedAt: foundPost.updatedAt,
       } as any);
 
-      const result = await prismaPostRepository.findById({ id: postId });
+      const result = await prismaPostRepository.findById({
+        id: postId,
+      });
 
       expect(prisma.post.findUnique).toHaveBeenCalledWith({
         where: { id: postId },
@@ -182,11 +272,22 @@ describe('PrismaPostRepository', () => {
 
   describe('findManyByParams', () => {
     it('should find many posts by params', async () => {
+      const userId = faker.string.uuid();
       const params: FindPostsByParams.Params = {
         keywords: faker.lorem.words(),
         topics: [faker.string.uuid()],
         skip: 10,
         take: 10,
+        user: { id: userId },
+      };
+      const like = {
+        id: faker.string.uuid(),
+        user: {
+          id: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: undefined,
+        },
       };
       const post = {
         id: faker.string.uuid(),
@@ -206,6 +307,7 @@ describe('PrismaPostRepository', () => {
             updatedAt: new Date(),
           },
         ],
+        likes: [like],
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -222,6 +324,7 @@ describe('PrismaPostRepository', () => {
             name: post.author.name,
           },
           topics: post.topics,
+          likes: [like],
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
         },
@@ -238,7 +341,11 @@ describe('PrismaPostRepository', () => {
             { content: { search: params.keywords.split(' ').join(' | ') } },
           ],
         },
-        include: { author: true, topics: true, likes: false },
+        include: {
+          author: true,
+          topics: true,
+          likes: { where: { userId }, include: { user: true } },
+        },
         skip: parseInt(params.skip.toString()),
         take: parseInt(params.take.toString()),
         orderBy: { createdAt: 'desc' },
@@ -257,6 +364,7 @@ describe('PrismaPostRepository', () => {
               topics: post.topics.map(
                 (topic) => new Topic({ ...(topic as any) })
               ),
+              like: new Like({ ...(like as any) }),
               content: post.content,
               published: post.published,
               title: post.title,

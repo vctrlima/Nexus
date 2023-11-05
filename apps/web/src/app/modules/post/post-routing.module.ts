@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PostComponent } from './views/post/post.component';
+import { CreateComponent } from './views/create/create.component';
+import { ViewComponent } from './views/view/view.component';
 
 const routes: Routes = [
-  { path: ':id', component: PostComponent },
+  { path: '', component: CreateComponent },
+  { path: ':id', component: ViewComponent },
   { path: '**', redirectTo: '/' },
 ];
 

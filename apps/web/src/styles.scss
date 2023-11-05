@@ -3,3 +3,79 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+.ck-content {
+  h2,
+  h3,
+  h4 {
+    @apply font-bold
+      text-primary;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-xl;
+  }
+
+  ol,
+  ul {
+    @apply pl-5;
+
+    ::marker {
+      @apply text-primary
+        font-semibold;
+    }
+  }
+
+  a {
+    @apply text-primary
+      cursor-pointer
+      underline;
+  }
+}
+
+.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
+.ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners {
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+.ck-rounded-corners
+  .ck.ck-editor__top
+  .ck-sticky-panel
+  .ck-sticky-panel__content_sticky
+  .ck-toolbar,
+.ck.ck-editor__top
+  .ck-sticky-panel
+  .ck-sticky-panel__content_sticky
+  .ck-toolbar.ck-rounded-corners {
+  border-radius: 0 !important;
+  border-left-width: 0;
+  border-right-width: 0;
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+  @apply min-h-[368px];
+}
+
+.ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable,
+.ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
+  border-radius: 0 0 0.5rem 0.5rem !important;
+  @apply shadow
+    border-b
+    border-solid
+    border-gray-200;
+}
+
+.ck.ck-sticky-panel .ck-sticky-panel__content_sticky {
+  top: 4rem !important;
+  left: 0 !important;
+  width: 100vw !important;
+  box-shadow: none !important;
+}

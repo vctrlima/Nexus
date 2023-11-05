@@ -20,7 +20,6 @@ export class CreateLikeController implements Controller {
       const like = await this.createLike.create(body);
       return created(like);
     } catch (error) {
-      console.log(error);
       return serverError(error);
     }
   }

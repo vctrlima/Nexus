@@ -34,11 +34,15 @@ describe('FindPostByIdController', () => {
     jest.spyOn(findPostById, 'findById').mockResolvedValue(foundPost);
     const request: HttpRequest<{ id: string }> = {
       params: { id: postId },
+      user: { id: foundPost.author.id },
     };
 
     const response = await findPostByIdController.handle(request);
 
-    expect(findPostById.findById).toHaveBeenCalledWith({ id: postId });
+    expect(findPostById.findById).toHaveBeenCalledWith({
+      id: postId,
+      user: { id: foundPost.author.id },
+    });
     expect(response).toEqual(ok(foundPost));
   });
 

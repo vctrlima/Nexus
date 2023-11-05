@@ -1,0 +1,36 @@
+<div class="nexus-create">
+  <header class="nexus-create__header">
+    <h2 class="nexus-create__message">Your voice, your space</h2>
+    <p class="nexus-create__description">
+      Get inspired, create a captivating title, and share your content with the
+      community. Your ideas are valuable and deserve to be heard!
+    </p>
+  </header>
+  <form [formGroup]="post" (ngSubmit)="submit()" class="nexus-create__form">
+    <input
+      class="nexus-create__title"
+      type="text"
+      placeholder="Title"
+      formControlName="title"
+    />
+    <ul class="nexus-create__topics">
+      <li *ngFor="let topic of topics">
+        <nexus-topic
+          [data]="topic"
+          [disabled]="false"
+          (toggle)="topic.selected = !topic.selected"
+        ></nexus-topic>
+      </li>
+    </ul>
+    <section class="nexus-create__content">
+      <ckeditor
+        [editor]="editor"
+        [config]="config"
+        formControlName="content"
+      ></ckeditor>
+    </section>
+    <footer class="nexus-create__footer">
+      <button type="submit" class="nexus-create__submit">Submit</button>
+    </footer>
+  </form>
+</div>

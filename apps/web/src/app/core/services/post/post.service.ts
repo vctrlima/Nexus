@@ -9,6 +9,16 @@ export class PostService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
+  public create(post: {
+    title: string;
+    content: string;
+    published: boolean;
+    topics: Topic[];
+    author: User;
+  }) {
+    return this.httpClient.post<Post>(`${this.apiUrl}/post`, post);
+  }
+
   public getPostById(id: string) {
     return this.httpClient.get<Post>(`${this.apiUrl}/post/${id}`);
   }

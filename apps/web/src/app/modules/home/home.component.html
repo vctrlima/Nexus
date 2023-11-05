@@ -1,7 +1,7 @@
 <section class="nexus-home">
   <div class="nexus-home__content">
     <div class="nexus-home__header">
-      <header class="nexus-home__header">
+      <div class="nexus-home__top-header">
         <h2 class="nexus-home__title">
           Recent posts
           <ng-container *ngIf="selectedTopics">
@@ -12,10 +12,37 @@
           </ng-container>
         </h2>
         <span class="nexus-home__description">See new user activity</span>
-      </header>
+      </div>
       <ul class="nexus-home__topics nexus-home__topics--mobile">
         <ng-container *ngTemplateOutlet="topicItems"></ng-container>
       </ul>
+      <div class="form-control">
+        <div class="input-group">
+          <input
+            type="text"
+            [(ngModel)]="searchParams.keywords"
+            (keydown.enter)="clearPosts(); getPosts()"
+            placeholder="Search"
+            class="input input-bordered outline-none flex-1 focus:outline-none h-8"
+          />
+          <button class="btn btn-sm" (click)="clearPosts(); getPosts()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
     <ul class="nexus-home__posts">
       <li *ngFor="let post of posts; last as isLast">
@@ -97,7 +124,7 @@
     </div>
   </aside>
 </section>
-<button class="nexus-home__create-post" *ngIf="isLoggedIn">
+<a class="nexus-home__create-post" *ngIf="isLoggedIn" [routerLink]="['/post']">
   Create post
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +149,7 @@
       d="M400 256H112"
     ></path>
   </svg>
-</button>
+</a>
 
 <ng-template #topicItems>
   <li *ngFor="let topic of topics">

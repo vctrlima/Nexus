@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   AuthService,
   Post,
   PostService,
-  SearchService,
   Topic,
   TopicService,
 } from '@web/app/core/services';
@@ -17,7 +15,12 @@ import { throwError } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
   public posts: Post[] = [];
-  public searchParams!: SearchPostsParams;
+  public searchParams: SearchPostsParams = {
+    keywords: '',
+    topics: '',
+    skip: 0,
+    take: 15,
+  };
   public topics: Topic[] = [];
 
   public get selectedTopics() {
@@ -34,54 +37,17 @@ export class HomeComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly postService: PostService,
-    private readonly searchService: SearchService,
-    private readonly topicService: TopicService,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly router: Router
+    private readonly topicService: TopicService
   ) {}
 
   ngOnInit(): void {
     this.scrollToTop();
-    this.subscribeSearch();
-    this.subscribeQueryParams();
     this.getTopics();
-  }
-
-  private defineQueryParams(queryParams: SearchPostsParams) {
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams,
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  private subscribeQueryParams() {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      const skip = params['skip'];
-      const take = params['take'];
-      let queryParams: any = { skip: skip ?? 0, take: take ?? 15 };
-      const keywords = params['keywords'];
-      if (keywords) queryParams = { ...queryParams, keywords };
-      const topics = params['topics'];
-      if (topics) queryParams = { ...queryParams, topics };
-      if (!this.searchParams != queryParams) {
-        this.searchParams = queryParams;
-        this.getPosts();
-      }
-    });
+    this.getPosts();
   }
 
   private scrollToTop() {
     window.scroll(0, 0);
-  }
-
-  private subscribeSearch(): void {
-    this.searchService.searchQuery.subscribe((keywords) => {
-      this.clearPosts();
-      if (keywords) {
-        this.defineQueryParams({ ...this.searchParams, skip: 0, keywords });
-      }
-    });
   }
 
   private getTopics(): void {
@@ -95,7 +61,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private getPosts(): void {
+  public getPosts(): void {
     this.postService.getPosts(this.searchParams).subscribe({
       next: (response) => {
         this.posts = this.posts.concat(response);
@@ -106,7 +72,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private clearPosts(): void {
+  public clearPosts(): void {
     this.posts = [];
   }
 
@@ -128,7 +94,8 @@ export class HomeComponent implements OnInit {
     this.toggleTopic(topic, selected);
     this.clearPosts();
     const queryParams = this.getTopicSearchParams();
-    this.defineQueryParams(queryParams);
+    this.searchParams = queryParams;
+    this.getPosts();
   }
 
   public togglePostLike(post: Post): void {
@@ -168,10 +135,11 @@ export class HomeComponent implements OnInit {
     if (currentPostsLength <= 0) return;
     const searchTakePagination = parseInt(this.searchParams.take.toString());
     if (currentPostsLength % searchTakePagination !== 0) return;
-    this.defineQueryParams({
+    this.searchParams = {
       ...this.searchParams,
       skip: parseInt(this.searchParams.skip.toString()) + searchTakePagination,
-    });
+    };
+    this.getPosts();
   }
 }
 
