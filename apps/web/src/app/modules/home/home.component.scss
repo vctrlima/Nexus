@@ -71,14 +71,16 @@
       grid-cols-3
       max-w-5xl
       mx-auto
-      gap-3;
+      gap-3
+      pt-4;
 
     &__topics {
       @apply flex
         justify-start
         items-center
         gap-2
-        mx-auto;
+        mx-auto
+        flex-wrap;
 
       &--mobile {
         @apply hidden;

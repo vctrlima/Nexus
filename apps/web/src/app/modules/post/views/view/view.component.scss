@@ -5,7 +5,8 @@
     @apply w-full
       max-w-2xl
       mx-auto
-      text-lg;
+      text-lg
+      pt-4;
   }
 
   &__content-title {
@@ -69,6 +70,15 @@
       w-10
       min-h-8
       px-1.5;
+  }
+
+  &__delete {
+    @apply btn
+      h-10
+      w-10
+      min-h-8
+      px-1.5
+      mr-2.5;
   }
 
   &__text {

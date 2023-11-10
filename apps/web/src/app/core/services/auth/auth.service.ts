@@ -11,7 +11,7 @@ export class AuthService {
   public get user(): User | false {
     const user = localStorage.getItem('user');
     if (!user) return false;
-    return JSON.parse(user);
+    return JSON.parse(user) as User;
   }
 
   public get accessToken(): string | false {

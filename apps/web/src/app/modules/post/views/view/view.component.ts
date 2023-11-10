@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService, Post, PostService } from '@web/app/core/services';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, Post, PostService, User } from '@web/app/core/services';
 import { Observable, throwError } from 'rxjs';
 
 @Component({
@@ -16,9 +16,14 @@ export class ViewComponent implements OnInit {
     return this.authService.isLoggedIn;
   }
 
+  public get user() {
+    return this.authService.user as User;
+  }
+
   constructor(
     private readonly authService: AuthService,
     private readonly postService: PostService,
+    private readonly router: Router,
     private readonly route: ActivatedRoute
   ) {}
 
@@ -60,6 +65,19 @@ export class ViewComponent implements OnInit {
     this.postService.unlike(post.like.id).subscribe({
       next: () => {
         post.like = undefined;
+      },
+      error: (error) => {
+        return throwError(() => new Error(error));
+      },
+    });
+  }
+
+  delete(post: Post): void {
+    if (!this.user?.id) return;
+    if (post?.author?.id !== this.user.id) return;
+    this.postService.delete(post.id).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
       },
       error: (error) => {
         return throwError(() => new Error(error));

@@ -37,6 +37,10 @@ export class PostService {
     return this.httpClient.get<Post[]>(`${this.apiUrl}/post`, { params });
   }
 
+  public delete(postId: string) {
+    return this.httpClient.delete(`${this.apiUrl}/post/${postId}`);
+  }
+
   public like(post: { id: string }) {
     return this.httpClient.post<Like>(`${this.apiUrl}/like`, { post });
   }

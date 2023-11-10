@@ -19,29 +19,69 @@
             </time>
           </address>
         </section>
-        <button
-          type="button"
-          class="nexus-post__like"
-          (click)="toggleLike(post)"
-          *ngIf="isLoggedIn"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            viewBox="0 0 24 24"
-            [attr.fill]="post.like?.id ? '#f8727260' : 'none'"
-            [attr.stroke]="post.like?.id ? '#f87272' : 'currentColor'"
+        <div>
+          <button
+            type="button"
+            class="nexus-post__delete"
+            (click)="deletePostModal.showModal()"
+            *ngIf="isLoggedIn && post.author?.id === user?.id"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              viewBox="0 0 448 512"
+              class="h-5 w-5"
+              stroke="#999999"
+            >
+              <path
+                d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="nexus-post__like"
+            (click)="toggleLike(post)"
+            *ngIf="isLoggedIn"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              viewBox="0 0 24 24"
+              [attr.fill]="post.like?.id ? '#f8727260' : 'none'"
+              [attr.stroke]="post.like?.id ? '#f87272' : 'currentColor'"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+          </button>
+        </div>
       </header>
       <div class="nexus-post__text" [innerHTML]="post.content"></div>
     </article>
+    <dialog #deletePostModal class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Attention!</h3>
+        <p class="py-4">
+          Are you sure that you really want to delete this post?
+          <strong class="text-error font-semibold">
+            This action is irreversible!
+          </strong>
+        </p>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn mr-2.5">Cancel</button>
+            <button class="btn btn-error" (click)="delete(post)">
+              Confirm
+            </button>
+          </form>
+        </div>
+      </div>
+    </dialog>
   </ng-container>
 </div>

@@ -72,6 +72,8 @@ export class CreateComponent implements OnInit {
 
   public submit() {
     this.post.get('topics')?.setValue(this.topics.filter((x) => x.selected));
+    console.log(this.post.invalid);
+    console.log(this.post.value);
     if (this.post.invalid) return;
     this.postService.create(this.post.value as any).subscribe({
       next: (response) => {
