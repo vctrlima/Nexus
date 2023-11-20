@@ -1,4 +1,10 @@
 .nexus-home {
+  @apply pt-4;
+
+  @media (min-width: 768px) {
+    @apply pt-0;
+  }
+
   &__aside {
     @apply hidden;
   }
@@ -11,6 +17,8 @@
     @apply flex
       justify-start
       items-center
+      flex-wrap
+      mb-4
       gap-2
       mx-auto;
 
