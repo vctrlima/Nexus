@@ -3,7 +3,7 @@
     <article class="nexus-post__content">
       <h1 class="nexus-post__content-title">{{ post.title }}</h1>
       <ul class="nexus-post__topics">
-        <li *ngFor="let topic of post.topics | slice : 0 : 2">
+        <li *ngFor="let topic of post.topics">
           <nexus-topic [data]="topic" [disabled]="true"></nexus-topic>
         </li>
       </ul>
